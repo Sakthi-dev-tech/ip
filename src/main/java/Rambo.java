@@ -1,4 +1,3 @@
-
 public class Rambo {
   private static void greeting() {
     String banner = " (                           \n"
@@ -14,11 +13,16 @@ public class Rambo {
     Constants.divider();
     System.out.println(banner);
     System.out.println("Hello! I am Rambo.\nWhat can I do for you?");
+  }
+
+  private static void bye() {
     Constants.divider();
+    System.out.println("Bye my friend!");
   }
 
   public static void main(String[] args) {
     // When I first start this program, I would like to greet first
     greeting();
+    bye();
   }
 }
