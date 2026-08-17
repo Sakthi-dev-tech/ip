@@ -119,11 +119,11 @@ q
 
 ```text
 Enter the index of the task you want to toggle status of:
-Index does not exist!
+Rambo: I cannot find this task! Give a valid index!
 Enter the index of the task you want to toggle status of:
-Index does not exist!
+Rambo: I cannot find this task! Give a valid index!
 Enter the index of the task you want to toggle status of:
-Index does not exist!
+Rambo: I cannot find this task! Give a valid index!
 Bye my friend!
 ```
 
@@ -192,6 +192,36 @@ Enter your option:
 Bye my friend!
 ```
 
+### UI-09 — Delete a task and retain the remaining task
+
+- **Aim:** Add two tasks, delete the first, and verify that the remaining task is listed at index 1.
+- **Match mode:** `ordered`
+- **Expected exit status:** `0`
+- **Input:**
+
+```text
+2
+1
+buy milk
+2
+1
+read book
+5
+1
+3
+q
+```
+
+- **Expected output:**
+
+```text
+Your task has been added!
+Your task has been added!
+Enter the index of the task you want to remove:
+1: [T][] read book
+Bye my friend!
+```
+
 ## Results
 
 - 2026-08-17 — **FAIL (environment)**
@@ -216,4 +246,9 @@ Bye my friend!
   - Java: OpenJDK 26.0.2
   - Build: PASS
   - UI-01–UI-08: PASS
+
+- 2026-08-17 — **PASS**
+  - Java: OpenJDK 26.0.2
+  - Build: PASS
+  - UI-01–UI-09: PASS
 
