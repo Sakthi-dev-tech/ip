@@ -13,6 +13,10 @@ public class Task {
     return this.taskName;
   }
 
+  public boolean checkIfDone() {
+    return this.isDone;
+  }
+
   public boolean toggleDone() {
     this.isDone = !this.isDone;
     return this.isDone;
@@ -20,6 +24,6 @@ public class Task {
 
   @Override
   public String toString() {
-    return String.format("[%s] %s", isDone ? "X" : "", this.taskName);
+    return String.format("[T][%s] %s", isDone ? "X" : "", this.taskName);
   }
 }

@@ -65,15 +65,68 @@ public class Rambo {
           Echo.start(scanner);
           break;
         case '2':
+          Constants.divider("TASK TYPE");
           // Add task function
-          System.out.print("Enter your task name: ");
+          System.out.println("1) Todo\n"
+              + "2) Deadline\n"
+              + "3) Event\n");
+          System.out.println("\n");
 
-          String taskName = scanner.nextLine();
-          Task newTask = new Task(taskName);
+          System.out.print("Choose the type of task you want to add: ");
 
-          userTasks.add(newTask);
+          int typeOfTask;
+          try {
+            typeOfTask = Integer.parseInt(scanner.nextLine());
+          } catch (NumberFormatException e) {
+            System.out.println(Constants.ANSI_RED + "Rambo needs a number to toggle!" + Constants.ANSI_RESET);
+            break;
+          }
 
-          System.out.println(Constants.ANSI_GREEN + "Your task has been added!" + Constants.ANSI_RESET);
+          Task taskToBeAdded = null;
+
+          switch (typeOfTask) {
+            case 1:
+              System.out.print("Enter your task name: ");
+              String taskName = scanner.nextLine();
+
+              taskToBeAdded = new Task(taskName);
+              break;
+
+            case 2:
+              System.out.print("Enter your task name: ");
+              taskName = scanner.nextLine();
+
+              System.out.print("Enter your deadline: ");
+              String deadline = scanner.nextLine();
+
+              taskToBeAdded = new DeadlineTask(taskName, deadline);
+              break;
+
+            case 3:
+              System.out.print("Enter your task name: ");
+              taskName = scanner.nextLine();
+
+              System.out.print("Enter your from date: ");
+              String from = scanner.nextLine();
+
+              System.out.print("Enter your to date: ");
+              String to = scanner.nextLine();
+
+              taskToBeAdded = new EventTask(taskName, from, to);
+              break;
+
+            default:
+              System.out.println(Constants.ANSI_RED + "Not a valid task type!" + Constants.ANSI_RESET);
+              break;
+          }
+
+          if (taskToBeAdded != null) {
+            userTasks.add(taskToBeAdded);
+            System.out.println(Constants.ANSI_GREEN + "Your task has been added!" + Constants.ANSI_RESET);
+          } else {
+            System.out.println(Constants.ANSI_RED + "Your task has not been added!" + Constants.ANSI_RESET);
+          }
+
           break;
 
         case '3':

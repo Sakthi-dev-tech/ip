@@ -13,7 +13,7 @@ public class Constants {
 
   public static void divider(String appName) {
     System.out.println("\n");
-    System.out.println(String.format("============================%s==============================", appName));
+    System.out.println(String.format("============================ %s ==============================", appName));
     System.out.println("\n");
   }
 
