@@ -72,15 +72,16 @@ public class Rambo {
 
       try {
         switch (userOpt) {
+          // Echo Selected
           case '1': {
-            // Echo Selected
             // Start the loop for echo app
             Echo.start(scanner);
             break;
           }
+
+          // Adding task has been chosen
           case '2': {
             Constants.divider("TASK TYPE");
-            // Add task function
             System.out.println("1) Todo\n"
                 + "2) Deadline\n"
                 + "3) Event\n");
@@ -98,6 +99,11 @@ public class Rambo {
 
             Task taskToBeAdded = null;
 
+            /*
+             * This will dictate the type of task the user chooses
+             *
+             * @param An integer to choose the type
+             */
               switch (typeOfTask) {
                 case 1: {
                   System.out.print("Enter your task name: ");
@@ -161,8 +167,8 @@ public class Rambo {
             break;
           }
 
+          // List out current saved tasks
           case '3': {
-            // List out current saved tasks
             Constants.divider("TASK LIST");
 
             for (int i = 0; i < userTasks.size(); i++) {
@@ -172,8 +178,8 @@ public class Rambo {
             break;
           }
 
+          // Toggle if task is done or not
           case '4': {
-            // Toggle if task is done or not
             System.out.print("Enter the index of the task you want to toggle status of: ");
             int noOfTasks = userTasks.size();
             int index;
@@ -192,8 +198,8 @@ public class Rambo {
             break;
           }
 
+          // Delete task has been selected
           case '5': {
-            // Delete task has been selected
             System.out.print("Enter the index of the task you want to remove: ");
             int noOfTasks = userTasks.size();
             int index;
@@ -212,6 +218,7 @@ public class Rambo {
             break;
           }
 
+          // Quit the loop
           case 'q': {
             chatLoop = false;
             break;
