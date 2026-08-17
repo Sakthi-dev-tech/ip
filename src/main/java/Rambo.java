@@ -18,33 +18,35 @@ public class Rambo {
         + "|_|_\\__,_|_|_|_| |_.__|___/\n"
         + "                            ";
 
-    String options = "1) Echo\n"
-      + "q) Quit\n"
-      + "Enter your option: ";
-
     Constants.divider();
     System.out.println(banner);
     System.out.println("Hello! I am Rambo.\nWhat can I do for you?");
     System.out.println("\n");
-    System.out.println(options);
-    System.out.println("\n");
   }
 
   public static void main(String[] args) {
+    String options = "1) Echo\n"
+        + "q) Quit\n";
+
     Scanner scanner = new Scanner(System.in);
 
     // When I first start this program, I would like to greet first
     home();
-    
-    System.out.print("> ");
-    
+
     boolean chatLoop = true;
+
     while (chatLoop) {
+      // Show the options to the users
+      Constants.divider();
+      System.out.println(options);
+      System.out.println("\n");
+      // An indicator to show user input is required here
+      System.out.print("Enter your option: ");
       char userOpt = scanner.next().charAt(0);
 
       switch (userOpt) {
         case '1':
-          System.out.println("Echo Selected!");
+          Echo.start(scanner);
           break;
         case 'q':
           chatLoop = false;
