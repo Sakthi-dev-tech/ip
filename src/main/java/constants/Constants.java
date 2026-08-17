@@ -6,10 +6,13 @@ public class Constants {
    * A simple divider to clearly define different sections
    */
   public static void divider() {
+    System.out.println("\n");
     System.out.println("===========================================================");
+    System.out.println("\n");
   }
 
   public static void divider(String appName) {
+    System.out.println("\n");
     System.out.println(String.format("============================%s==============================", appName));
     System.out.println("\n");
   }

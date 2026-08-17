@@ -38,6 +38,7 @@ public class Rambo {
     String options = "1) Echo\n"
         + "2) Add Task\n"
         + "3) List Tasks\n"
+        + "4) Toggle Task Done Status\n"
         + "q) Quit\n";
 
     Scanner scanner = new Scanner(System.in);
@@ -60,9 +61,11 @@ public class Rambo {
       switch (userOpt) {
         case '1':
           // Echo Selected
+          // Start the loop for echo app
           Echo.start(scanner);
           break;
         case '2':
+          // Add task function
           System.out.print("Enter your task name: ");
 
           String taskName = scanner.nextLine();
@@ -74,6 +77,7 @@ public class Rambo {
           break;
 
         case '3':
+          // List out current saved tasks
           Constants.divider("TASK LIST");
 
           for (int i = 0; i < userTasks.size(); i++) {
@@ -82,11 +86,33 @@ public class Rambo {
 
           break;
 
+        case '4':
+          // Toggle if task is done or not
+          System.out.print("Enter the index of the task you want to toggle status of: ");
+          int noOfTasks = userTasks.size();
+          int index;
+
+          try {
+            index = Integer.parseInt(scanner.nextLine());
+          } catch (NumberFormatException e) {
+            System.out.println(Constants.ANSI_RED + "Rambo needs a number to toggle!" + Constants.ANSI_RESET);
+            break;
+          }
+
+          if (index - 1 < 0 || index - 1 >= noOfTasks) {
+            System.out.println(Constants.ANSI_RED + "Index does not exist!" + Constants.ANSI_RESET);
+            break;
+          }
+
+          userTasks.get(index - 1).toggleDone();
+          break;
+
         case 'q':
           chatLoop = false;
           break;
         default:
-          System.out.println(Constants.ANSI_RED + "That option doesn't exist, my friend! Try again!\n" + Constants.ANSI_RESET);
+          System.out.println(
+              Constants.ANSI_RED + "That option doesn't exist, my friend! Try again!\n" + Constants.ANSI_RESET);
       }
     }
 

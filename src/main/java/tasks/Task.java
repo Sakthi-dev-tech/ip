@@ -20,6 +20,6 @@ public class Task {
 
   @Override
   public String toString() {
-    return this.taskName;
+    return String.format("[%s] %s", isDone ? "X" : "", this.taskName);
   }
 }
