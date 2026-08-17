@@ -16,8 +16,6 @@ public class Echo {
   public static void start(Scanner scanner) {
     Constants.divider("Echo");
     intro();
-    scanner.nextLine(); // Consume the newline left by Rambo's next().
-
     while (true) {
       System.out.print("You: ");
       String userText = scanner.nextLine();
