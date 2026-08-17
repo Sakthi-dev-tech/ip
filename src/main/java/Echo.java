@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import constants.*;
 
 public class Echo {
   private static void intro() {
@@ -13,6 +14,7 @@ public class Echo {
    * This would be the main loop for the echo function
    */
   public static void start(Scanner scanner) {
+    Constants.divider("Echo");
     intro();
     scanner.nextLine(); // Consume the newline left by Rambo's next().
 
