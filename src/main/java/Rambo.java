@@ -1,8 +1,12 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import tasks.*;
 import exceptions.*;
+import java.io.IOException;
 import constants.Constants;
 
 public class Rambo {
@@ -33,6 +37,7 @@ public class Rambo {
     /*
      * App state will be stored here
      */
+    // TODO: Make sure this stays in sync with the data file
     final List<Task> userTasks = new ArrayList<>();
 
     String options = "1) Echo\n"
@@ -101,8 +106,6 @@ public class Rambo {
 
             /*
              * This will dictate the type of task the user chooses
-             *
-             * @param An integer to choose the type
              */
               switch (typeOfTask) {
                 case 1: {
@@ -171,6 +174,7 @@ public class Rambo {
           case '3': {
             Constants.divider("TASK LIST");
 
+            // Should read a data file, and create the userTasks array
             for (int i = 0; i < userTasks.size(); i++) {
               System.out.println(String.format("%d: %s", i + 1, userTasks.get(i).toString()));
             }
