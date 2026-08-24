@@ -10,6 +10,7 @@ import java.nio.file.StandardOpenOption;
 import tasks.*;
 import java.io.IOException;
 import constants.Constants;
+import exceptions.RamboException;
 
 public class Functions {
   private static final Path DATA_FILE = Paths.get("./data/Rambo.txt");
@@ -85,10 +86,48 @@ public class Functions {
    */
   public static void addTaskToFile(Task task) throws IOException {
     Files.createDirectories(DATA_FILE.getParent());
-    Files.writeString(DATA_FILE, task.toDataString() + System.lineSeparator(),
-        StandardCharsets.UTF_8, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+    Files.writeString(
+        DATA_FILE,
+        task.toDataString() + System.lineSeparator(),
+        StandardCharsets.UTF_8,
+        StandardOpenOption.CREATE,
+        StandardOpenOption.APPEND);
   }
 
+  /**
+   * Toggles a task's done status and saves the updated task list.
+   *
+   * @param taskNumber the one-based task number shown to the user
+   * @throws IOException    if the data file cannot be read or written
+   * @throws RamboException if the task number does not exist
+   */
+  public static void toggleTaskInFile(int taskNumber) throws IOException, RamboException {
+    List<Task> tasks = readTasks();
+    int index = taskNumber - 1;
+
+    if (index < 0 || index >= tasks.size()) {
+      throw new RamboException("I cannot find this task! Give a valid index!");
+    }
+
+    tasks.get(index).toggleDone();
+
+    List<String> records = new ArrayList<>();
+    for (Task task : tasks) {
+      records.add(task.toDataString());
+    }
+
+    // We rewrite the file
+    Files.write(
+        DATA_FILE,
+        records,
+        StandardCharsets.UTF_8,
+        StandardOpenOption.TRUNCATE_EXISTING,
+        StandardOpenOption.WRITE);
+  }
+
+  /**
+   * Renders a welcome message
+   */
   public static void home() {
     String banner = " (                           \n"
         + ")\\ )                 )\n"
@@ -106,6 +145,9 @@ public class Functions {
     System.out.println("\n");
   }
 
+  /**
+   * Renders a bye message
+   */
   public static void bye() {
     Constants.divider();
     System.out.println("Bye my friend!");

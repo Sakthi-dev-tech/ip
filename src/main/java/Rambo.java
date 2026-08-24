@@ -172,7 +172,6 @@ public class Rambo {
           // Toggle if task is done or not
           case '4': {
             System.out.print("Enter the index of the task you want to toggle status of: ");
-            int noOfTasks = userTasks.size();
             int index;
 
             try {
@@ -181,11 +180,12 @@ public class Rambo {
               throw new RamboException("Give Rambo a valid number!");
             }
 
-            if (index - 1 < 0 || index - 1 >= noOfTasks) {
-              throw new RamboException("I cannot find this task! Give a valid index!");
+            try {
+              Functions.toggleTaskInFile(index);
+            } catch (IOException e) {
+              throw new RamboException("Rambo could not update your task!");
             }
 
-            userTasks.get(index - 1).toggleDone();
             break;
           }
 
