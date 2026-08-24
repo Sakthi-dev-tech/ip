@@ -1,4 +1,5 @@
 import java.util.List;
+import java.util.Locale;
 import java.util.Scanner;
 import tasks.*;
 import exceptions.*;
@@ -11,7 +12,7 @@ public class Rambo {
   public static void main(String[] args) {
     String options = "1) Echo\n"
         + "2) Add Task\n"
-        + "3) List Tasks\n"
+        + "3) List Tasks (use: 3 <keyword> to search)\n"
         + "4) Toggle Task Done Status\n"
         + "5) Delete Task\n"
         + "q) Quit\n";
@@ -141,12 +142,22 @@ public class Rambo {
             Constants.divider("TASK LIST");
 
             List<Task> tasksList = Functions.readTasks();
+            String searchTerm = input.substring(1).trim();
+            String normalisedSearchTerm = searchTerm.toLowerCase(Locale.ROOT);
+            boolean foundMatchingTask = false;
 
             for (int i = 0; i < tasksList.size(); i++) {
-              System.out.println(String.format("%d: %s", i + 1, tasksList.get(i).toString()));
+              Task task = tasksList.get(i);
+              if (searchTerm.isEmpty()
+                  || task.getTaskName().toLowerCase(Locale.ROOT).contains(normalisedSearchTerm)) {
+                System.out.println(String.format("%d: %s", i + 1, task.toString()));
+                foundMatchingTask = true;
+              }
             }
 
-            // Should read a data file, and create the userTasks array
+            if (!searchTerm.isEmpty() && !foundMatchingTask) {
+              System.out.println(String.format("No tasks found matching \"%s\".", searchTerm));
+            }
 
             break;
           }
