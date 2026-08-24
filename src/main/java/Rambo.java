@@ -1,15 +1,19 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import tasks.*;
 import exceptions.*;
 import java.io.IOException;
 import constants.Constants;
 
 public class Rambo {
+
+  private static final Path DATA_FILE = Paths.get("./data/Rambo.txt");
 
   /**
    * Reads saved tasks from the data file and creates the corresponding task
@@ -20,10 +24,9 @@ public class Rambo {
    *                     record
    */
   public static List<Task> readTasks() throws IOException {
-    Path dataFile = Paths.get("./data/.Rambo.txt");
     List<Task> tasks = new ArrayList<>();
 
-    for (String line : Files.readAllLines(dataFile)) {
+    for (String line : Files.readAllLines(DATA_FILE)) {
       if (line.isBlank()) {
         continue;
       }
@@ -73,6 +76,18 @@ public class Rambo {
     }
 
     return tasks;
+  }
+
+  /**
+   * Creates the data file if needed and appends one task to it.
+   *
+   * @param task the task to save
+   * @throws IOException if the data directory or file cannot be written
+   */
+  public static void addTaskToFile(Task task) throws IOException {
+    Files.createDirectories(DATA_FILE.getParent());
+    Files.writeString(DATA_FILE, task.toDataString() + System.lineSeparator(),
+        StandardCharsets.UTF_8, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
   }
 
   private static void bye() {
@@ -227,8 +242,12 @@ public class Rambo {
               }
             }
 
-            userTasks.add(taskToBeAdded);
-            System.out.println(Constants.ANSI_GREEN + "Your task has been added!" + Constants.ANSI_RESET);
+            try {
+              addTaskToFile(taskToBeAdded);
+              System.out.println(Constants.ANSI_GREEN + "\nYour task has been added!" + Constants.ANSI_RESET);
+            } catch (IOException e) {
+              throw new RamboException("Rambo could not save your task!");
+            }
 
             break;
           }

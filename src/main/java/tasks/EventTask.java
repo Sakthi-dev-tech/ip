@@ -11,6 +11,10 @@ public class EventTask extends Task {
     this.to = to;
   }
 
+  @Override
+  public String toDataString() {
+    return String.format("E|%s|%s|%s|%s", super.checkIfDone() ? "X" : "", super.getTaskName(), this.from, this.to);
+  }
 
   @Override
   public String toString() {
