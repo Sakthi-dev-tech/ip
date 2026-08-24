@@ -1,5 +1,7 @@
 package functions;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.nio.charset.StandardCharsets;
@@ -14,6 +16,21 @@ import exceptions.RamboException;
 
 public class Functions {
   private static final Path DATA_FILE = Paths.get("./data/Rambo.txt");
+
+  /*
+   * ===================== TASK FUNCTIONS ======================
+   */
+
+  /**
+   * Take a date string that is in the format YYYY-MM-DD and convert it into a LocalDate class
+   */
+  public static LocalDate convertStringToDate(String date) throws RamboException {
+      try {
+        return LocalDate.parse(date);
+      } catch (DateTimeParseException e) {
+        throw new RamboException("Please make sure your date is the following format (YYYY-MM-DD)");
+      }
+  }
 
   /**
    * Reads saved tasks from the data file and creates the corresponding task
@@ -162,6 +179,10 @@ public class Functions {
     tasks.remove(index);
     writeTasks(tasks);
   }
+
+  /* 
+   * ======================= GENERAL FUNCTIONS =====================
+   */
 
   /**
    * Renders a welcome message
