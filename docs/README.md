@@ -20,10 +20,24 @@ Example: `keyword (optional arguments)`
 expected output
 ```
 
-## Feature ABC
+## Listing and searching for tasks
 
-// Feature details
+Enter `3` to list all saved tasks:
 
+```text
+3
+```
+
+Add a keyword after `3` to show only tasks whose descriptions contain that
+keyword. Searching is case-insensitive and also supports phrases:
+
+```text
+3 milk
+3 buy milk
+```
+
+Search results retain their original task numbers so you can use those numbers
+when toggling or deleting tasks.
 
 ## Feature XYZ
 

@@ -222,6 +222,58 @@ Enter the index of the task you want to remove:
 Bye my friend!
 ```
 
+### UI-10 — Search task descriptions
+
+- **Aim:** Check that the menu advertises search and that an inline, case-insensitive search displays matching tasks with their original numbers.
+- **Match mode:** `ordered`
+- **Expected exit status:** `0`
+- **Input:**
+
+```text
+2
+1
+buy milk
+2
+1
+read book
+2
+1
+milk tea
+3 MILK
+q
+```
+
+- **Expected output:**
+
+```text
+3) List Tasks (use: 3 <keyword> to search)
+1: [T][] buy milk
+3: [T][] milk tea
+Bye my friend!
+```
+
+### UI-11 — Report a task search with no matches
+
+- **Aim:** Check that searching for a term absent from every task produces a clear result rather than an empty task list.
+- **Match mode:** `ordered`
+- **Expected exit status:** `0`
+- **Input:**
+
+```text
+2
+1
+buy milk
+3 homework
+q
+```
+
+- **Expected output:**
+
+```text
+No tasks found matching "homework".
+Bye my friend!
+```
+
 ## Results
 
 - 2026-08-17 — **FAIL (environment)**
