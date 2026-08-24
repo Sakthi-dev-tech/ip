@@ -28,30 +28,45 @@ public class Rambo {
         continue;
       }
 
-      String[] fields = line.split("\\|", -1);
+      String[] fields = line.split("\\|");
+      for (int i = 0; i < fields.length; i++) {
+        fields[i] = fields[i].trim();
+      }
+
       try {
+        Task task;
         switch (fields[0]) {
           case "T":
             if (fields.length != 3) {
               throw new IllegalArgumentException();
             }
-            tasks.add(new Task(fields[1]));
+            task = new Task(fields[2]);
             break;
           case "D":
             if (fields.length != 4) {
               throw new IllegalArgumentException();
             }
-            tasks.add(new DeadlineTask(fields[1], fields[2]));
+            task = new DeadlineTask(fields[2], fields[3]);
             break;
           case "E":
             if (fields.length != 5) {
               throw new IllegalArgumentException();
             }
-            tasks.add(new EventTask(fields[1], fields[2], fields[3]));
+            task = new EventTask(fields[2], fields[3], fields[4]);
             break;
           default:
             throw new IllegalArgumentException();
         }
+
+        if (!fields[1].isEmpty() && !fields[1].equals("X")) {
+          throw new IllegalArgumentException();
+        }
+
+        if (fields[1].equals("X")) {
+          task.toggleDone();
+        }
+
+        tasks.add(task);
       } catch (IllegalArgumentException | ArrayIndexOutOfBoundsException e) {
         throw new IOException("Invalid task record: " + line, e);
       }
@@ -229,7 +244,7 @@ public class Rambo {
                 System.out.println(String.format("%d: %s", i + 1, tasksList.get(i).toString()));
               }
             } catch (IOException e) {
-              System.out.println(Constants.ANSI_RED + "No tasks found!" + Constants.ANSI_RESET);
+              System.out.println(Constants.ANSI_RED + e.getMessage() + Constants.ANSI_RESET);
             }
 
             // Should read a data file, and create the userTasks array
