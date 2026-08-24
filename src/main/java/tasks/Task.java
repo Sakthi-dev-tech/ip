@@ -1,8 +1,11 @@
 package tasks;
 
+import java.time.format.DateTimeFormatter;
 public class Task {
   private String taskName;
   private boolean isDone;
+
+  protected final DateTimeFormatter DISPLAY_FORMAT = DateTimeFormatter.ofPattern("MMM dd yyyy");
 
   public Task(String taskName) {
     this.taskName = taskName;

@@ -1,12 +1,15 @@
 package tasks;
 
+import java.time.LocalDate;
+import functions.Functions;
+
 public class DeadlineTask extends Task {
-  private String deadline;
+  private LocalDate deadline;
 
   public DeadlineTask(String taskName, String deadline) {
     super(taskName);
 
-    this.deadline = deadline;
+    this.deadline = Functions.convertStringToDate(deadline);
   }
 
   @Override
@@ -16,6 +19,6 @@ public class DeadlineTask extends Task {
 
   @Override
   public String toString() {
-    return String.format("[D][%s] %s (by: %s)", super.checkIfDone() ? "X" : "", super.getTaskName(), this.deadline);
+    return String.format("[D][%s] %s (by: %s)", super.checkIfDone() ? "X" : "", super.getTaskName(), this.deadline.format(this.DISPLAY_FORMAT));
   }
 }

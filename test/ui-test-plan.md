@@ -27,7 +27,7 @@ q
 
 ```text
 Enter your option:
-That option doesn't exist, my friend! Try again!
+Rambo: That option doesn't exist, my friend! Try again!
 Enter your option:
 Bye my friend!
 ```
@@ -48,7 +48,7 @@ q
 
 ```text
 Enter your option:
-That option doesn't exist, my friend! Try again!
+Rambo: That option doesn't exist, my friend! Try again!
 Enter your option:
 Bye my friend!
 ```
@@ -70,7 +70,7 @@ q
 
 ```text
 Choose the type of task you want to add:
-Rambo needs a number to toggle!
+Rambo: Give me a valid task type number!
 Enter your option:
 Bye my friend!
 ```
@@ -256,3 +256,9 @@ Bye my friend!
   - Java version check: skipped at user request
   - Build: PASS
   - UI-01–UI-09: PASS
+
+- 2026-08-24 — **PASS**
+  - Java version check: skipped at user request
+  - Build: PASS
+  - UI-01–UI-09: PASS
+  - Scope: centralized `RamboException` changes
