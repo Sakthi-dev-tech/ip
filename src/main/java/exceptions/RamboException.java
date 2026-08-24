@@ -13,4 +13,14 @@ public class RamboException extends Exception {
     public RamboException(String message) {
         super("Rambo: " + message);
     }
+
+    /**
+     * Creates an exception that retains the underlying cause for debugging.
+     *
+     * @param message explanation shown to the user
+     * @param cause underlying exception that caused the failure
+     */
+    public RamboException(String message, Throwable cause) {
+        super("Rambo: " + message, cause);
+    }
 }

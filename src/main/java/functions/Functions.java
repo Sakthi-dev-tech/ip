@@ -20,17 +20,24 @@ public class Functions {
    * objects.
    *
    * @return the tasks stored in the data file
-   * @throws IOException if the file cannot be read or contains an invalid task
-   *                     record
+   * @throws RamboException if the file cannot be read or contains an invalid
+   *                        task record
    */
-  public static List<Task> readTasks() throws IOException {
+  public static List<Task> readTasks() throws RamboException {
     List<Task> tasks = new ArrayList<>();
 
     if (!Files.exists(DATA_FILE)) {
       return tasks;
     }
 
-    for (String line : Files.readAllLines(DATA_FILE)) {
+    List<String> lines;
+    try {
+      lines = Files.readAllLines(DATA_FILE);
+    } catch (IOException e) {
+      throw new RamboException("Could not read your saved tasks!", e);
+    }
+
+    for (String line : lines) {
       if (line.isBlank()) {
         continue;
       }
@@ -40,43 +47,39 @@ public class Functions {
         fields[i] = fields[i].trim();
       }
 
-      try {
-        Task task;
-        switch (fields[0]) {
-          case "T":
-            if (fields.length != 3) {
-              throw new IllegalArgumentException();
-            }
-            task = new Task(fields[2]);
-            break;
-          case "D":
-            if (fields.length != 4) {
-              throw new IllegalArgumentException();
-            }
-            task = new DeadlineTask(fields[2], fields[3]);
-            break;
-          case "E":
-            if (fields.length != 5) {
-              throw new IllegalArgumentException();
-            }
-            task = new EventTask(fields[2], fields[3], fields[4]);
-            break;
-          default:
-            throw new IllegalArgumentException();
-        }
-
-        if (!fields[1].isEmpty() && !fields[1].equals("X")) {
-          throw new IllegalArgumentException();
-        }
-
-        if (fields[1].equals("X")) {
-          task.toggleDone();
-        }
-
-        tasks.add(task);
-      } catch (IllegalArgumentException | ArrayIndexOutOfBoundsException e) {
-        throw new IOException("Invalid task record: " + line, e);
+      Task task;
+      switch (fields[0]) {
+        case "T":
+          if (fields.length != 3) {
+            throw new RamboException("Invalid task record: " + line);
+          }
+          task = new Task(fields[2]);
+          break;
+        case "D":
+          if (fields.length != 4) {
+            throw new RamboException("Invalid task record: " + line);
+          }
+          task = new DeadlineTask(fields[2], fields[3]);
+          break;
+        case "E":
+          if (fields.length != 5) {
+            throw new RamboException("Invalid task record: " + line);
+          }
+          task = new EventTask(fields[2], fields[3], fields[4]);
+          break;
+        default:
+          throw new RamboException("Invalid task record: " + line);
       }
+
+      if (!fields[1].isEmpty() && !fields[1].equals("X")) {
+        throw new RamboException("Invalid task record: " + line);
+      }
+
+      if (fields[1].equals("X")) {
+        task.toggleDone();
+      }
+
+      tasks.add(task);
     }
 
     return tasks;
@@ -86,42 +89,50 @@ public class Functions {
    * Creates the data file if needed and appends one task to it.
    *
    * @param task the task to save
-   * @throws IOException if the data directory or file cannot be written
+   * @throws RamboException if the data directory or file cannot be written
    */
-  public static void addTaskToFile(Task task) throws IOException {
-    Files.createDirectories(DATA_FILE.getParent());
-    Files.writeString(
-        DATA_FILE,
-        task.toDataString() + System.lineSeparator(),
-        StandardCharsets.UTF_8,
-        StandardOpenOption.CREATE,
-        StandardOpenOption.APPEND);
+  public static void addTaskToFile(Task task) throws RamboException {
+    try {
+      Files.createDirectories(DATA_FILE.getParent());
+      Files.writeString(
+          DATA_FILE,
+          task.toDataString() + System.lineSeparator(),
+          StandardCharsets.UTF_8,
+          StandardOpenOption.CREATE,
+          StandardOpenOption.APPEND);
+    } catch (IOException e) {
+      throw new RamboException("Could not save your task!", e);
+    }
   }
 
   /**
    * Replaces the data file contents with the supplied tasks.
    *
    * @param tasks tasks to save
-   * @throws IOException if the data file cannot be written
+   * @throws RamboException if the data file cannot be written
    */
-  private static void writeTasks(List<Task> tasks) throws IOException {
+  private static void writeTasks(List<Task> tasks) throws RamboException {
     List<String> records = new ArrayList<>();
     for (Task task : tasks) {
       records.add(task.toDataString());
     }
 
-    Files.write(DATA_FILE, records, StandardCharsets.UTF_8,
-        StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE);
+    try {
+      Files.write(DATA_FILE, records, StandardCharsets.UTF_8,
+          StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE);
+    } catch (IOException e) {
+      throw new RamboException("Could not update your saved tasks!", e);
+    }
   }
 
   /**
    * Toggles a task's done status and saves the updated task list.
    *
    * @param taskNumber the one-based task number shown to the user
-   * @throws IOException    if the data file cannot be read or written
-   * @throws RamboException if the task number does not exist
+   * @throws RamboException if the task number does not exist or the data file
+   *                        cannot be read or written
    */
-  public static void toggleTaskInFile(int taskNumber) throws IOException, RamboException {
+  public static void toggleTaskInFile(int taskNumber) throws RamboException {
     List<Task> tasks = readTasks();
     int index = taskNumber - 1;
 
@@ -137,10 +148,10 @@ public class Functions {
    * Deletes a task and saves the remaining task list.
    *
    * @param taskNumber the one-based task number shown to the user
-   * @throws IOException if the data file cannot be read or written
-   * @throws RamboException if the task number does not exist
+   * @throws RamboException if the task number does not exist or the data file
+   *                        cannot be read or written
    */
-  public static void deleteTaskFromFile(int taskNumber) throws IOException, RamboException {
+  public static void deleteTaskFromFile(int taskNumber) throws RamboException {
     List<Task> tasks = readTasks();
     int index = taskNumber - 1;
 

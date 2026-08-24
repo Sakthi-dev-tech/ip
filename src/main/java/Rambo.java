@@ -2,7 +2,6 @@ import java.util.List;
 import java.util.Scanner;
 import tasks.*;
 import exceptions.*;
-import java.io.IOException;
 
 import functions.Functions;
 import constants.Constants;
@@ -37,15 +36,13 @@ public class Rambo {
       }
 
       String input = scanner.nextLine();
-      if (input.isEmpty()) {
-        System.out.println(
-            Constants.ANSI_RED + "That option doesn't exist, my friend! Try again!" + Constants.ANSI_RESET);
-        continue;
-      }
-
-      char userOpt = input.charAt(0);
-
       try {
+        if (input.isEmpty()) {
+          throw new RamboException("That option doesn't exist, my friend! Try again!");
+        }
+
+        char userOpt = input.charAt(0);
+
         switch (userOpt) {
           // Echo Selected
           case '1': {
@@ -68,8 +65,7 @@ public class Rambo {
             try {
               typeOfTask = Integer.parseInt(scanner.nextLine());
             } catch (NumberFormatException e) {
-              System.out.println(Constants.ANSI_RED + "Rambo needs a number to toggle!" + Constants.ANSI_RESET);
-              break;
+              throw new RamboException("Give me a valid task type number!", e);
             }
 
             Task taskToBeAdded = null;
@@ -134,12 +130,8 @@ public class Rambo {
               }
             }
 
-            try {
-              Functions.addTaskToFile(taskToBeAdded);
-              System.out.println(Constants.ANSI_GREEN + "\nYour task has been added!" + Constants.ANSI_RESET);
-            } catch (IOException e) {
-              throw new RamboException("Rambo could not save your task!");
-            }
+            Functions.addTaskToFile(taskToBeAdded);
+            System.out.println(Constants.ANSI_GREEN + "\nYour task has been added!" + Constants.ANSI_RESET);
 
             break;
           }
@@ -148,14 +140,10 @@ public class Rambo {
           case '3': {
             Constants.divider("TASK LIST");
 
-            try {
-              List<Task> tasksList = Functions.readTasks();
+            List<Task> tasksList = Functions.readTasks();
 
-              for (int i = 0; i < tasksList.size(); i++) {
-                System.out.println(String.format("%d: %s", i + 1, tasksList.get(i).toString()));
-              }
-            } catch (IOException e) {
-              System.out.println(Constants.ANSI_RED + e.getMessage() + Constants.ANSI_RESET);
+            for (int i = 0; i < tasksList.size(); i++) {
+              System.out.println(String.format("%d: %s", i + 1, tasksList.get(i).toString()));
             }
 
             // Should read a data file, and create the userTasks array
@@ -171,14 +159,10 @@ public class Rambo {
             try {
               index = Integer.parseInt(scanner.nextLine());
             } catch (NumberFormatException e) {
-              throw new RamboException("Give Rambo a valid number!");
+              throw new RamboException("Give me a valid number!", e);
             }
 
-            try {
-              Functions.toggleTaskInFile(index);
-            } catch (IOException e) {
-              throw new RamboException("Rambo could not update your task!");
-            }
+            Functions.toggleTaskInFile(index);
 
             break;
           }
@@ -191,14 +175,10 @@ public class Rambo {
             try {
               index = Integer.parseInt(scanner.nextLine());
             } catch (NumberFormatException e) {
-              throw new RamboException("Give Rambo a valid number!");
+              throw new RamboException("Give me a valid number!", e);
             }
 
-            try {
-              Functions.deleteTaskFromFile(index);
-            } catch (IOException e) {
-              throw new RamboException("Rambo could not delete your task!");
-            }
+            Functions.deleteTaskFromFile(index);
 
             break;
           }
@@ -209,8 +189,7 @@ public class Rambo {
             break;
           }
           default: {
-            System.out.println(
-                Constants.ANSI_RED + "That option doesn't exist, my friend! Try again!\n" + Constants.ANSI_RESET);
+            throw new RamboException("That option doesn't exist, my friend! Try again!");
           }
         }
         // All RamboExceptions will be caught here
