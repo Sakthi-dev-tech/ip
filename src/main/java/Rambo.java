@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import tasks.*;
@@ -11,11 +10,6 @@ import constants.Constants;
 public class Rambo {
 
   public static void main(String[] args) {
-    /*
-     * App state will be stored here
-     */
-    final List<Task> userTasks = new ArrayList<>();
-
     String options = "1) Echo\n"
         + "2) Add Task\n"
         + "3) List Tasks\n"
@@ -192,7 +186,6 @@ public class Rambo {
           // Delete task has been selected
           case '5': {
             System.out.print("Enter the index of the task you want to remove: ");
-            int noOfTasks = userTasks.size();
             int index;
 
             try {
@@ -201,11 +194,12 @@ public class Rambo {
               throw new RamboException("Give Rambo a valid number!");
             }
 
-            if (index - 1 < 0 || index - 1 >= noOfTasks) {
-              throw new RamboException("I cannot find this task! Give a valid index!");
+            try {
+              Functions.deleteTaskFromFile(index);
+            } catch (IOException e) {
+              throw new RamboException("Rambo could not delete your task!");
             }
 
-            userTasks.remove(index - 1);
             break;
           }
 
@@ -219,8 +213,9 @@ public class Rambo {
                 Constants.ANSI_RED + "That option doesn't exist, my friend! Try again!\n" + Constants.ANSI_RESET);
           }
         }
+        // All RamboExceptions will be caught here
       } catch (RamboException e) {
-        System.out.println(Constants.ANSI_RED + "Rambo: " + e.getMessage() + Constants.ANSI_RESET);
+        System.out.println(Constants.ANSI_RED + e.getMessage() + Constants.ANSI_RESET);
       }
     }
 

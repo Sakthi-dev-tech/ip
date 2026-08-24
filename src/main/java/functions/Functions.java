@@ -95,6 +95,22 @@ public class Functions {
   }
 
   /**
+   * Replaces the data file contents with the supplied tasks.
+   *
+   * @param tasks tasks to save
+   * @throws IOException if the data file cannot be written
+   */
+  private static void writeTasks(List<Task> tasks) throws IOException {
+    List<String> records = new ArrayList<>();
+    for (Task task : tasks) {
+      records.add(task.toDataString());
+    }
+
+    Files.write(DATA_FILE, records, StandardCharsets.UTF_8,
+        StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE);
+  }
+
+  /**
    * Toggles a task's done status and saves the updated task list.
    *
    * @param taskNumber the one-based task number shown to the user
@@ -110,19 +126,26 @@ public class Functions {
     }
 
     tasks.get(index).toggleDone();
+    writeTasks(tasks);
+  }
 
-    List<String> records = new ArrayList<>();
-    for (Task task : tasks) {
-      records.add(task.toDataString());
+  /**
+   * Deletes a task and saves the remaining task list.
+   *
+   * @param taskNumber the one-based task number shown to the user
+   * @throws IOException if the data file cannot be read or written
+   * @throws RamboException if the task number does not exist
+   */
+  public static void deleteTaskFromFile(int taskNumber) throws IOException, RamboException {
+    List<Task> tasks = readTasks();
+    int index = taskNumber - 1;
+
+    if (index < 0 || index >= tasks.size()) {
+      throw new RamboException("I cannot find this task! Give a valid index!");
     }
 
-    // We rewrite the file
-    Files.write(
-        DATA_FILE,
-        records,
-        StandardCharsets.UTF_8,
-        StandardOpenOption.TRUNCATE_EXISTING,
-        StandardOpenOption.WRITE);
+    tasks.remove(index);
+    writeTasks(tasks);
   }
 
   /**
