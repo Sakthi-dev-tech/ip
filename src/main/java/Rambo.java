@@ -11,6 +11,55 @@ import constants.Constants;
 
 public class Rambo {
 
+  /**
+   * Reads saved tasks from the data file and creates the corresponding task
+   * objects.
+   *
+   * @return the tasks stored in the data file
+   * @throws IOException if the file cannot be read or contains an invalid task
+   *                     record
+   */
+  public static List<Task> readTasks() throws IOException {
+    Path dataFile = Paths.get("./data/.Rambo.txt");
+    List<Task> tasks = new ArrayList<>();
+
+    for (String line : Files.readAllLines(dataFile)) {
+      if (line.isBlank()) {
+        continue;
+      }
+
+      String[] fields = line.split("\\|", -1);
+      try {
+        switch (fields[0]) {
+          case "T":
+            if (fields.length != 3) {
+              throw new IllegalArgumentException();
+            }
+            tasks.add(new Task(fields[1]));
+            break;
+          case "D":
+            if (fields.length != 4) {
+              throw new IllegalArgumentException();
+            }
+            tasks.add(new DeadlineTask(fields[1], fields[2]));
+            break;
+          case "E":
+            if (fields.length != 5) {
+              throw new IllegalArgumentException();
+            }
+            tasks.add(new EventTask(fields[1], fields[2], fields[3]));
+            break;
+          default:
+            throw new IllegalArgumentException();
+        }
+      } catch (IllegalArgumentException | ArrayIndexOutOfBoundsException e) {
+        throw new IOException("Invalid task record: " + line, e);
+      }
+    }
+
+    return tasks;
+  }
+
   private static void bye() {
     Constants.divider();
     System.out.println("Bye my friend!");
@@ -37,7 +86,6 @@ public class Rambo {
     /*
      * App state will be stored here
      */
-    // TODO: Make sure this stays in sync with the data file
     final List<Task> userTasks = new ArrayList<>();
 
     String options = "1) Echo\n"
@@ -107,62 +155,62 @@ public class Rambo {
             /*
              * This will dictate the type of task the user chooses
              */
-              switch (typeOfTask) {
-                case 1: {
-                  System.out.print("Enter your task name: ");
-                  String taskName = scanner.nextLine();
+            switch (typeOfTask) {
+              case 1: {
+                System.out.print("Enter your task name: ");
+                String taskName = scanner.nextLine();
 
-                  if (taskName.isBlank()) {
-                    throw new RamboException("Task name cannot be blank!");
-                  }
-                  taskToBeAdded = new Task(taskName);
-                  break;
+                if (taskName.isBlank()) {
+                  throw new RamboException("Task name cannot be blank!");
                 }
-
-                case 2: {
-                  System.out.print("Enter your task name: ");
-                  String taskName = scanner.nextLine();
-                  if (taskName.isBlank()) {
-                    throw new RamboException("Task name cannot be blank!");
-                  }
-
-                  System.out.print("Enter your deadline: ");
-                  String deadline = scanner.nextLine();
-                  if (deadline.isBlank()) {
-                    throw new RamboException("Deadline cannot be blank!");
-                  }
-
-                  taskToBeAdded = new DeadlineTask(taskName, deadline);
-                  break;
-                }
-
-                case 3: {
-                  System.out.print("Enter your task name: ");
-                  String taskName = scanner.nextLine();
-                  if (taskName.isBlank()) {
-                    throw new RamboException("Task name cannot be blank!");
-                  }
-
-                  System.out.print("Enter your from date: ");
-                  String from = scanner.nextLine();
-                  if (from.isBlank()) {
-                    throw new RamboException("From date cannot be blank!");
-                  }
-
-                  System.out.print("Enter your to date: ");
-                  String to = scanner.nextLine();
-                  if (to.isBlank()) {
-                    throw new RamboException("To date cannot be blank!");
-                  }
-
-                  taskToBeAdded = new EventTask(taskName, from, to);
-                  break;
-                }
-
-                default: {
-                  throw new RamboException("Not a valid task type!");
-                }
+                taskToBeAdded = new Task(taskName);
+                break;
               }
+
+              case 2: {
+                System.out.print("Enter your task name: ");
+                String taskName = scanner.nextLine();
+                if (taskName.isBlank()) {
+                  throw new RamboException("Task name cannot be blank!");
+                }
+
+                System.out.print("Enter your deadline: ");
+                String deadline = scanner.nextLine();
+                if (deadline.isBlank()) {
+                  throw new RamboException("Deadline cannot be blank!");
+                }
+
+                taskToBeAdded = new DeadlineTask(taskName, deadline);
+                break;
+              }
+
+              case 3: {
+                System.out.print("Enter your task name: ");
+                String taskName = scanner.nextLine();
+                if (taskName.isBlank()) {
+                  throw new RamboException("Task name cannot be blank!");
+                }
+
+                System.out.print("Enter your from date: ");
+                String from = scanner.nextLine();
+                if (from.isBlank()) {
+                  throw new RamboException("From date cannot be blank!");
+                }
+
+                System.out.print("Enter your to date: ");
+                String to = scanner.nextLine();
+                if (to.isBlank()) {
+                  throw new RamboException("To date cannot be blank!");
+                }
+
+                taskToBeAdded = new EventTask(taskName, from, to);
+                break;
+              }
+
+              default: {
+                throw new RamboException("Not a valid task type!");
+              }
+            }
 
             userTasks.add(taskToBeAdded);
             System.out.println(Constants.ANSI_GREEN + "Your task has been added!" + Constants.ANSI_RESET);
@@ -174,10 +222,17 @@ public class Rambo {
           case '3': {
             Constants.divider("TASK LIST");
 
-            // Should read a data file, and create the userTasks array
-            for (int i = 0; i < userTasks.size(); i++) {
-              System.out.println(String.format("%d: %s", i + 1, userTasks.get(i).toString()));
+            try {
+              List<Task> tasksList = readTasks();
+
+              for (int i = 0; i < tasksList.size(); i++) {
+                System.out.println(String.format("%d: %s", i + 1, tasksList.get(i).toString()));
+              }
+            } catch (IOException e) {
+              System.out.println(Constants.ANSI_RED + "No tasks found!" + Constants.ANSI_RESET);
             }
+
+            // Should read a data file, and create the userTasks array
 
             break;
           }
