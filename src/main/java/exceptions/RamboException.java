@@ -11,6 +11,6 @@ public class RamboException extends Exception {
      * @param message explanation shown to the user
      */
     public RamboException(String message) {
-        super(message);
+        super("Rambo: " + message);
     }
 }

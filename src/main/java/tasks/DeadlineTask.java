@@ -9,6 +9,10 @@ public class DeadlineTask extends Task {
     this.deadline = deadline;
   }
 
+  @Override
+  public String toDataString() {
+    return String.format("D|%s|%s|%s", super.checkIfDone() ? "X" : "", super.getTaskName(), this.deadline);
+  }
 
   @Override
   public String toString() {
