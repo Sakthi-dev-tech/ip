@@ -26,6 +26,10 @@ public class Functions {
   public static List<Task> readTasks() throws IOException {
     List<Task> tasks = new ArrayList<>();
 
+    if (!Files.exists(DATA_FILE)) {
+      return tasks;
+    }
+
     for (String line : Files.readAllLines(DATA_FILE)) {
       if (line.isBlank()) {
         continue;

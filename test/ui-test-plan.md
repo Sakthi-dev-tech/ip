@@ -252,3 +252,7 @@ Bye my friend!
   - Build: PASS
   - UI-01–UI-09: PASS
 
+- 2026-08-24 — **PASS**
+  - Java version check: skipped at user request
+  - Build: PASS
+  - UI-01–UI-09: PASS
