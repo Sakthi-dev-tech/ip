@@ -1,5 +1,5 @@
 import java.util.Scanner;
-import constants.*;
+import constants.Constants;
 
 public class Echo {
   private static void intro() {

@@ -9,7 +9,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import tasks.*;
+import tasks.Task;
+import tasks.DeadlineTask;
+import tasks.EventTask;
 import java.io.IOException;
 import constants.Constants;
 import exceptions.RamboException;
@@ -178,8 +180,7 @@ public class Functions {
 
     tasks.remove(index);
     writeTasks(tasks);
-  }
-
+  } 
   /* 
    * ======================= GENERAL FUNCTIONS =====================
    */
