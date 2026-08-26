@@ -1,7 +1,5 @@
 package functions;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 import java.util.List;
 import tasks.Task;
 import exceptions.RamboException;
@@ -11,17 +9,6 @@ public class Functions {
   /*
    * ===================== TASK FUNCTIONS ======================
    */
-
-  /**
-   * Take a date string that is in the format YYYY-MM-DD and convert it into a LocalDate class
-   */
-  public static LocalDate convertStringToDate(String date) throws RamboException {
-      try {
-        return LocalDate.parse(date);
-      } catch (DateTimeParseException e) {
-        throw new RamboException("Please make sure your date is the following format (YYYY-MM-DD)");
-      }
-  }
 
   /**
    * Toggles a task's done status and saves the updated task list.

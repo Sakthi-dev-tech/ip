@@ -1,7 +1,7 @@
 package tasks;
 
 import java.time.LocalDate;
-import functions.Functions;
+import parser.Parser;
 
 /**
  * Represents an event task with a name, from date, and to date.
@@ -20,8 +20,8 @@ public class EventTask extends Task {
   public EventTask(String taskName, String from, String to) {
     super(taskName);
 
-    this.from = Functions.convertStringToDate(from);
-    this.to = Functions.convertStringToDate(to);
+    this.from = Parser.parseDate(from);
+    this.to = Parser.parseDate(to);
   }
 
   /**

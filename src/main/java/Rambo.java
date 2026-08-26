@@ -11,6 +11,7 @@ import exceptions.RamboException;
 
 import functions.Functions;
 import constants.Constants;
+import parser.Parser;
 import storage.Storage;
 
 public class Rambo {
@@ -25,6 +26,7 @@ public class Rambo {
 
     Scanner scanner = new Scanner(System.in);
     Ui ui = new Ui(scanner);
+    Parser parser = new Parser();
     Storage storage = new Storage("./data/Rambo.txt");
 
     // When I first start this program, I would like to greet first
@@ -46,11 +48,7 @@ public class Rambo {
 
       String input = ui.readLine();
       try {
-        if (input.isEmpty()) {
-          throw new RamboException("That option doesn't exist, my friend! Try again!");
-        }
-
-        char userOpt = input.charAt(0);
+        char userOpt = parser.parseCommand(input);
 
         switch (userOpt) {
           // Echo Selected
@@ -70,12 +68,7 @@ public class Rambo {
 
             ui.showPrompt("Choose the type of task you want to add: ");
 
-            int typeOfTask;
-            try {
-              typeOfTask = Integer.parseInt(ui.readLine());
-            } catch (NumberFormatException e) {
-              throw new RamboException("Give me a valid task type number!", e);
-            }
+            int typeOfTask = parser.parseTaskType(ui.readLine());
 
             Task taskToBeAdded = null;
 
@@ -150,7 +143,7 @@ public class Rambo {
             ui.showDivider("TASK LIST");
 
             List<Task> tasksList = storage.loadTasks();
-            String searchTerm = input.substring(1).trim();
+            String searchTerm = parser.parseSearchTerm(input);
             String normalisedSearchTerm = searchTerm.toLowerCase(Locale.ROOT);
             boolean foundMatchingTask = false;
 
@@ -173,13 +166,7 @@ public class Rambo {
           // Toggle if task is done or not
           case '4': {
             ui.showPrompt("Enter the index of the task you want to toggle status of: ");
-            int index;
-
-            try {
-              index = Integer.parseInt(ui.readLine());
-            } catch (NumberFormatException e) {
-              throw new RamboException("Give me a valid number!", e);
-            }
+            int index = parser.parseTaskNumber(ui.readLine());
 
             Functions.toggleTaskInFile(index, storage);
 
@@ -189,13 +176,7 @@ public class Rambo {
           // Delete task has been selected
           case '5': {
             ui.showPrompt("Enter the index of the task you want to remove: ");
-            int index;
-
-            try {
-              index = Integer.parseInt(ui.readLine());
-            } catch (NumberFormatException e) {
-              throw new RamboException("Give me a valid number!", e);
-            }
+            int index = parser.parseTaskNumber(ui.readLine());
 
             Functions.deleteTaskFromFile(index, storage);
 
