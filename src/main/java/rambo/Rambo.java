@@ -1,18 +1,18 @@
+package rambo;
+
 import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
 
-import tasks.Task;
-import tasks.TaskList;
-import ui.Ui;
-import tasks.DeadlineTask;
-import tasks.EventTask;
-
-import exceptions.RamboException;
-
-import constants.Constants;
-import parser.Parser;
-import storage.Storage;
+import rambo.exception.RamboException;
+import rambo.parser.Parser;
+import rambo.storage.Storage;
+import rambo.task.DeadlineTask;
+import rambo.task.EventTask;
+import rambo.task.Task;
+import rambo.task.TaskList;
+import rambo.ui.Constants;
+import rambo.ui.Ui;
 
 public class Rambo {
 

@@ -1,9 +1,9 @@
-package parser;
+package rambo.parser;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
-import exceptions.RamboException;
+import rambo.exception.RamboException;
 
 /**
  * Interprets and validates input entered by the user.

@@ -1,9 +1,9 @@
-package tasks;
+package rambo.task;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import exceptions.RamboException;
+import rambo.exception.RamboException;
 
 /**
  * Contains the application's tasks and provides operations for modifying them.

@@ -3,7 +3,7 @@
 ## Test configuration
 
 - Build command: `rm -rf out && javac -d out $(find src/main/java -name '*.java')`
-- Default launch command: `java -cp out Rambo`
+- Default launch command: `java -cp out rambo.Rambo`
 - Timeout per test case: 10 seconds
 - Output includes standard output and standard error.
 - Cases run in order in a fresh process and stop at the first failure.
@@ -274,6 +274,87 @@ No tasks found matching "homework".
 Bye my friend!
 ```
 
+### UI-12 — Add and display tasks with dates
+
+- **Aim:** Check that deadline and event tasks accept ISO dates and display them in the user-friendly date format.
+- **Match mode:** `ordered`
+- **Expected exit status:** `0`
+- **Input:**
+
+```text
+2
+2
+submit report
+2026-09-15
+2
+3
+project meeting
+2026-09-20
+2026-09-22
+3
+q
+```
+
+- **Expected output:**
+
+```text
+Your task has been added!
+Your task has been added!
+1: [D][] submit report (by: Sept 15 2026)
+2: [E][] project meeting (from: Sept 20 2026 to: Sept 22 2026)
+Bye my friend!
+```
+
+### UI-13 — Reject an invalid deadline date
+
+- **Aim:** Check that a malformed deadline date is rejected and the main-menu session remains usable.
+- **Match mode:** `ordered`
+- **Expected exit status:** `0`
+- **Input:**
+
+```text
+2
+2
+submit report
+15-09-2026
+q
+```
+
+- **Expected output:**
+
+```text
+Enter your deadline:
+Rambo: Please make sure your date is the following format (YYYY-MM-DD)
+Enter your option:
+Bye my friend!
+```
+
+### UI-14 — Reject an invalid event date
+
+- **Aim:** Check that an invalid calendar date in an event range is rejected without terminating the session.
+- **Match mode:** `ordered`
+- **Expected exit status:** `0`
+- **Input:**
+
+```text
+2
+3
+project meeting
+2026-09-20
+2026-02-30
+q
+```
+
+- **Expected output:**
+
+```text
+Enter your from date:
+Enter your to date:
+Rambo: Please make sure your date is the following format (YYYY-MM-DD)
+Enter your option:
+Bye my friend!
+```
+
 ## Results
 
 - 2026-08-17 — **FAIL (environment)**
@@ -314,3 +395,15 @@ Bye my friend!
   - Build: PASS
   - UI-01–UI-09: PASS
   - Scope: centralized `RamboException` changes
+
+- 2026-08-26 — **PASS**
+  - Java version check: skipped at user request; compiled with `--release 25`
+  - Build: PASS
+  - UI-01–UI-11: PASS
+  - Scope: package reorganization under `rambo`
+
+- 2026-08-26 — **PASS**
+  - Java version check: skipped at user request; compiled with `--release 25`
+  - Build: PASS
+  - UI-01–UI-14: PASS
+  - Scope: deadline and event date coverage
