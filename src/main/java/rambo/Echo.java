@@ -1,4 +1,6 @@
-import ui.Ui;
+package rambo;
+
+import rambo.ui.Ui;
 
 public class Echo {
   private static void intro(Ui ui) {

@@ -1,4 +1,4 @@
-package exceptions;
+package rambo.exception;
 
 /**
  * Represents an error caused by invalid input to Rambo.

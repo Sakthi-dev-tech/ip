@@ -1,4 +1,4 @@
-package storage;
+package rambo.storage;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -9,10 +9,10 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 
-import exceptions.RamboException;
-import tasks.DeadlineTask;
-import tasks.EventTask;
-import tasks.Task;
+import rambo.exception.RamboException;
+import rambo.task.DeadlineTask;
+import rambo.task.EventTask;
+import rambo.task.Task;
 
 /**
  * Loads tasks from a file and saves tasks to that file.

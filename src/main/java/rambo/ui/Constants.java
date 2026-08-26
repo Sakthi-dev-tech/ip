@@ -1,4 +1,4 @@
-package constants;
+package rambo.ui;
 
 /**
  * Constants used throughout the Rambo application.

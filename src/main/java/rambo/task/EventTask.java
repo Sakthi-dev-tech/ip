@@ -1,7 +1,8 @@
-package tasks;
+package rambo.task;
 
 import java.time.LocalDate;
-import parser.Parser;
+
+import rambo.parser.Parser;
 
 /**
  * Represents an event task with a name, from date, and to date.

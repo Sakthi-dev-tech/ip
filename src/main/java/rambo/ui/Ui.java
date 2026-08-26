@@ -1,8 +1,6 @@
-package ui;
+package rambo.ui;
 
 import java.util.Scanner;
-
-import constants.Constants;
 
 /**
  * Handles all interactions between the Rambo application and the user.
