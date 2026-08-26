@@ -42,9 +42,9 @@ public class Rambo {
       return;
     }
 
-    boolean chatLoop = true;
+    boolean isChatRunning = true;
 
-    while (chatLoop) {
+    while (isChatRunning) {
       // Show the options to the users
       ui.showDivider();
 
@@ -198,7 +198,7 @@ public class Rambo {
 
           // Quit the loop
           case 'q': {
-            chatLoop = false;
+            isChatRunning = false;
             break;
           }
           default: {
