@@ -11,6 +11,7 @@ import exceptions.RamboException;
 
 import functions.Functions;
 import constants.Constants;
+import storage.Storage;
 
 public class Rambo {
 
@@ -24,6 +25,7 @@ public class Rambo {
 
     Scanner scanner = new Scanner(System.in);
     Ui ui = new Ui(scanner);
+    Storage storage = new Storage("./data/Rambo.txt");
 
     // When I first start this program, I would like to greet first
     ui.showWelcome();
@@ -137,7 +139,7 @@ public class Rambo {
               }
             }
 
-            Functions.addTaskToFile(taskToBeAdded);
+            storage.appendTask(taskToBeAdded);
             ui.showLine(Constants.ANSI_GREEN + "\nYour task has been added!" + Constants.ANSI_RESET);
 
             break;
@@ -147,7 +149,7 @@ public class Rambo {
           case '3': {
             ui.showDivider("TASK LIST");
 
-            List<Task> tasksList = Functions.readTasks();
+            List<Task> tasksList = storage.loadTasks();
             String searchTerm = input.substring(1).trim();
             String normalisedSearchTerm = searchTerm.toLowerCase(Locale.ROOT);
             boolean foundMatchingTask = false;
@@ -179,7 +181,7 @@ public class Rambo {
               throw new RamboException("Give me a valid number!", e);
             }
 
-            Functions.toggleTaskInFile(index);
+            Functions.toggleTaskInFile(index, storage);
 
             break;
           }
@@ -195,7 +197,7 @@ public class Rambo {
               throw new RamboException("Give me a valid number!", e);
             }
 
-            Functions.deleteTaskFromFile(index);
+            Functions.deleteTaskFromFile(index, storage);
 
             break;
           }
