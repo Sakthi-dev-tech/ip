@@ -1,33 +1,32 @@
-import java.util.Scanner;
-import constants.Constants;
+import ui.Ui;
 
 public class Echo {
-  private static void intro() {
-    Constants.divider();
-    System.out.println("Welcome to Echo!");
-    System.out.println("Here I will echo whatever you tell me!");
-    System.out.println("Enter /exit to go back!");
-    Constants.divider();
+  private static void intro(Ui ui) {
+    ui.showDivider();
+    ui.showLine("Welcome to Echo!");
+    ui.showLine("Here I will echo whatever you tell me!");
+    ui.showLine("Enter /exit to go back!");
+    ui.showDivider();
   }
 
   /*
    * This would be the main loop for the echo function
    */
-  public static void start(Scanner scanner) {
-    Constants.divider("Echo");
-    intro();
+  public static void start(Ui ui) {
+    ui.showDivider("Echo");
+    intro(ui);
     while (true) {
-      System.out.print("You: ");
-      String userText = scanner.nextLine();
+      ui.showPrompt("You: ");
+      String userText = ui.readLine();
 
       // If I am exiting, I would like to break the loop
       if (userText.equals("/exit")) {
-        System.out.println("Back to home!");
+        ui.showLine("Back to home!");
         break;
       }
 
-      System.out.print("Rambo: ");
-      System.out.println(userText);
+      ui.showPrompt("Rambo: ");
+      ui.showLine(userText);
     }
 
   }

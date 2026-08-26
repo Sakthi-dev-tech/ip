@@ -1,7 +1,7 @@
 package tasks;
 
 import java.time.LocalDate;
-import functions.Functions;
+import parser.Parser;
 
 /**
  * Represents a deadline task with a name and a deadline date.
@@ -18,7 +18,7 @@ public class DeadlineTask extends Task {
   public DeadlineTask(String taskName, String deadline) {
     super(taskName);
 
-    this.deadline = Functions.convertStringToDate(deadline);
+    this.deadline = Parser.parseDate(deadline);
   }
 
   /**
