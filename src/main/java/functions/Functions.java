@@ -13,7 +13,6 @@ import tasks.Task;
 import tasks.DeadlineTask;
 import tasks.EventTask;
 import java.io.IOException;
-import constants.Constants;
 import exceptions.RamboException;
 
 public class Functions {
@@ -181,35 +180,4 @@ public class Functions {
     tasks.remove(index);
     writeTasks(tasks);
   } 
-  /* 
-   * ======================= GENERAL FUNCTIONS =====================
-   */
-
-  /**
-   * Renders a welcome message
-   */
-  public static void home() {
-    String banner = " (                           \n"
-        + ")\\ )                 )\n"
-        + "(()/(   )    )    ( /(\n"
-        + " /(_)| /(   (     )\\()) (\n"
-        + "(_)) )(_))  )\\  '((_)\\  )\\\n"
-        + "| _ ((_)_ _((_)) | |(_)((_)\n"
-        + "|   / _` | '  \\()| '_ Y _ \\\n"
-        + "|_|_\\__,_|_|_|_| |_.__|___/\n"
-        + "                            ";
-
-    Constants.divider();
-    System.out.println(banner);
-    System.out.println("Hello! I am Rambo.\nWhat can I do for you?");
-    System.out.println("\n");
-  }
-
-  /**
-   * Renders a bye message
-   */
-  public static void bye() {
-    Constants.divider();
-    System.out.println("Bye my friend!");
-  }
 }

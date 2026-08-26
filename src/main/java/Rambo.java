@@ -3,6 +3,7 @@ import java.util.Locale;
 import java.util.Scanner;
 
 import tasks.Task;
+import ui.Ui;
 import tasks.DeadlineTask;
 import tasks.EventTask;
 
@@ -22,25 +23,26 @@ public class Rambo {
         + "q) Quit\n";
 
     Scanner scanner = new Scanner(System.in);
+    Ui ui = new Ui(scanner);
 
     // When I first start this program, I would like to greet first
-    Functions.home();
+    ui.showWelcome();
 
     boolean chatLoop = true;
 
     while (chatLoop) {
       // Show the options to the users
-      Constants.divider();
+      ui.showDivider();
 
-      System.out.println(options);
-      System.out.println("\n");
+      ui.showLine(options);
+      ui.showLine("\n");
 
-      System.out.print("Enter your option: ");
-      if (!scanner.hasNextLine()) {
+      ui.showPrompt("Enter your option: ");
+      if (!ui.hasNextLine()) {
         break;
       }
 
-      String input = scanner.nextLine();
+      String input = ui.readLine();
       try {
         if (input.isEmpty()) {
           throw new RamboException("That option doesn't exist, my friend! Try again!");
@@ -52,23 +54,23 @@ public class Rambo {
           // Echo Selected
           case '1': {
             // Start the loop for echo app
-            Echo.start(scanner);
+            Echo.start(ui);
             break;
           }
 
           // Adding task has been chosen
           case '2': {
-            Constants.divider("TASK TYPE");
-            System.out.println("1) Todo\n"
+            ui.showDivider("TASK TYPE");
+            ui.showLine("1) Todo\n"
                 + "2) Deadline\n"
                 + "3) Event\n");
-            System.out.println("\n");
+            ui.showLine("\n");
 
-            System.out.print("Choose the type of task you want to add: ");
+            ui.showPrompt("Choose the type of task you want to add: ");
 
             int typeOfTask;
             try {
-              typeOfTask = Integer.parseInt(scanner.nextLine());
+              typeOfTask = Integer.parseInt(ui.readLine());
             } catch (NumberFormatException e) {
               throw new RamboException("Give me a valid task type number!", e);
             }
@@ -80,8 +82,8 @@ public class Rambo {
              */
             switch (typeOfTask) {
               case 1: {
-                System.out.print("Enter your task name: ");
-                String taskName = scanner.nextLine();
+                ui.showPrompt("Enter your task name: ");
+                String taskName = ui.readLine();
 
                 if (taskName.isBlank()) {
                   throw new RamboException("Task name cannot be blank!");
@@ -91,14 +93,14 @@ public class Rambo {
               }
 
               case 2: {
-                System.out.print("Enter your task name: ");
-                String taskName = scanner.nextLine();
+                ui.showPrompt("Enter your task name: ");
+                String taskName = ui.readLine();
                 if (taskName.isBlank()) {
                   throw new RamboException("Task name cannot be blank!");
                 }
 
-                System.out.print("Enter your deadline: ");
-                String deadline = scanner.nextLine();
+                ui.showPrompt("Enter your deadline: ");
+                String deadline = ui.readLine();
                 if (deadline.isBlank()) {
                   throw new RamboException("Deadline cannot be blank!");
                 }
@@ -108,20 +110,20 @@ public class Rambo {
               }
 
               case 3: {
-                System.out.print("Enter your task name: ");
-                String taskName = scanner.nextLine();
+                ui.showPrompt("Enter your task name: ");
+                String taskName = ui.readLine();
                 if (taskName.isBlank()) {
                   throw new RamboException("Task name cannot be blank!");
                 }
 
-                System.out.print("Enter your from date: ");
-                String from = scanner.nextLine();
+                ui.showPrompt("Enter your from date: ");
+                String from = ui.readLine();
                 if (from.isBlank()) {
                   throw new RamboException("From date cannot be blank!");
                 }
 
-                System.out.print("Enter your to date: ");
-                String to = scanner.nextLine();
+                ui.showPrompt("Enter your to date: ");
+                String to = ui.readLine();
                 if (to.isBlank()) {
                   throw new RamboException("To date cannot be blank!");
                 }
@@ -136,14 +138,14 @@ public class Rambo {
             }
 
             Functions.addTaskToFile(taskToBeAdded);
-            System.out.println(Constants.ANSI_GREEN + "\nYour task has been added!" + Constants.ANSI_RESET);
+            ui.showLine(Constants.ANSI_GREEN + "\nYour task has been added!" + Constants.ANSI_RESET);
 
             break;
           }
 
           // List out current saved tasks
           case '3': {
-            Constants.divider("TASK LIST");
+            ui.showDivider("TASK LIST");
 
             List<Task> tasksList = Functions.readTasks();
             String searchTerm = input.substring(1).trim();
@@ -154,13 +156,13 @@ public class Rambo {
               Task task = tasksList.get(i);
               if (searchTerm.isEmpty()
                   || task.getTaskName().toLowerCase(Locale.ROOT).contains(normalisedSearchTerm)) {
-                System.out.println(String.format("%d: %s", i + 1, task.toString()));
+                ui.showLine(String.format("%d: %s", i + 1, task.toString()));
                 foundMatchingTask = true;
               }
             }
 
             if (!searchTerm.isEmpty() && !foundMatchingTask) {
-              System.out.println(String.format("No tasks found matching \"%s\".", searchTerm));
+              ui.showLine(String.format("No tasks found matching \"%s\".", searchTerm));
             }
 
             break;
@@ -168,11 +170,11 @@ public class Rambo {
 
           // Toggle if task is done or not
           case '4': {
-            System.out.print("Enter the index of the task you want to toggle status of: ");
+            ui.showPrompt("Enter the index of the task you want to toggle status of: ");
             int index;
 
             try {
-              index = Integer.parseInt(scanner.nextLine());
+              index = Integer.parseInt(ui.readLine());
             } catch (NumberFormatException e) {
               throw new RamboException("Give me a valid number!", e);
             }
@@ -184,11 +186,11 @@ public class Rambo {
 
           // Delete task has been selected
           case '5': {
-            System.out.print("Enter the index of the task you want to remove: ");
+            ui.showPrompt("Enter the index of the task you want to remove: ");
             int index;
 
             try {
-              index = Integer.parseInt(scanner.nextLine());
+              index = Integer.parseInt(ui.readLine());
             } catch (NumberFormatException e) {
               throw new RamboException("Give me a valid number!", e);
             }
@@ -209,11 +211,11 @@ public class Rambo {
         }
         // All RamboExceptions will be caught here
       } catch (RamboException e) {
-        System.out.println(Constants.ANSI_RED + e.getMessage() + Constants.ANSI_RESET);
+        ui.showLine(Constants.ANSI_RED + e.getMessage() + Constants.ANSI_RESET);
       }
     }
 
-    scanner.close();
-    Functions.bye();
+    ui.close();
+    ui.showGoodbye();
   }
 }
