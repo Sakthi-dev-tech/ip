@@ -24,6 +24,11 @@ dependencies {
 
 test {
     useJUnitPlatform()
+    workingDir layout.buildDirectory.dir('test-working-directory')
+
+    doFirst {
+        workingDir.mkdirs()
+    }
 
     testLogging {
         events 'passed', 'skipped', 'failed'
@@ -37,7 +42,7 @@ test {
 }
 
 application {
-    mainClass = 'seedu.duke.Duke'
+    mainClass = 'rambo.Rambo'
 }
 
 jar {
@@ -48,7 +53,7 @@ jar {
 }
 
 shadowJar {
-    archiveFileName = 'duke.jar'
+    archiveFileName = 'rambo.jar'
 }
 
 run {
