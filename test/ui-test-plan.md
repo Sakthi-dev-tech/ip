@@ -300,8 +300,8 @@ q
 ```text
 Your task has been added!
 Your task has been added!
-1: [D][] submit report (by: Sept 15 2026)
-2: [E][] project meeting (from: Sept 20 2026 to: Sept 22 2026)
+1: [D][] submit report (by: Sep 15 2026)
+2: [E][] project meeting (from: Sep 20 2026 to: Sep 22 2026)
 Bye my friend!
 ```
 
