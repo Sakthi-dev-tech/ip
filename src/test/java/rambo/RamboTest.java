@@ -83,6 +83,22 @@ public class RamboTest {
                 "Bye my friend!");
     }
 
+    @Test
+    void getResponse_taskCommands_updatesAndListsTasks() throws IOException {
+        Files.deleteIfExists(DATA_FILE);
+        try {
+            Rambo rambo = new Rambo();
+
+            assertTrue(rambo.getResponse("todo buy milk").contains("[T][] buy milk"));
+            assertTrue(rambo.getResponse("deadline submit report /by 2026-09-15")
+                    .contains("[D][] submit report (by: Sep 15 2026)"));
+            assertTrue(rambo.getResponse("done 1").contains("[T][X] buy milk"));
+            assertTrue(rambo.getResponse("list").contains("2. [D][] submit report (by: Sep 15 2026)"));
+        } finally {
+            Files.deleteIfExists(DATA_FILE);
+        }
+    }
+
     /**
      * Runs Rambo with in-memory input and output in Gradle's disposable test working directory.
      *

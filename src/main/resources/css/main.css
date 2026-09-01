@@ -1,0 +1,45 @@
+.root-pane {
+    -fx-background-color: #f6f7f9;
+    -fx-font-family: "Segoe UI", "Arial", sans-serif;
+}
+
+.scroll-pane {
+    -fx-background: #f6f7f9;
+    -fx-background-color: #f6f7f9;
+    -fx-border-color: transparent;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: #f6f7f9;
+}
+
+.dialog-container {
+    -fx-background-color: #f6f7f9;
+}
+
+.input-bar {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #d8dee8 transparent transparent transparent;
+}
+
+.text-field {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #c7d0dc;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-padding: 9 10;
+    -fx-font-size: 14px;
+}
+
+.button {
+    -fx-background-color: #2f6f68;
+    -fx-background-radius: 6;
+    -fx-text-fill: white;
+    -fx-font-weight: 700;
+    -fx-padding: 9 16;
+}
+
+.button:disabled,
+.text-field:disabled {
+    -fx-opacity: 0.65;
+}
