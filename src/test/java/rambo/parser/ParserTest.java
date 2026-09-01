@@ -21,6 +21,11 @@ public class ParserTest {
     }
 
     @Test
+    void parseCommand_byeCommand_returnsQuitCommandCharacter() {
+        assertEquals('q', parser.parseCommand("bye"));
+    }
+
+    @Test
     void parseCommand_unknownCommand_throwsRamboException() {
         assertThrows(RamboException.class, () -> parser.parseCommand("x"));
     }
