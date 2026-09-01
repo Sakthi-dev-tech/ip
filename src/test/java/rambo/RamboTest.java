@@ -84,6 +84,15 @@ public class RamboTest {
     }
 
     @Test
+    void run_byeAtMainMenu_exitsCleanly() throws IOException {
+        String output = runRambo("bye\n");
+
+        assertOutputContainsInOrder(output,
+                "q or bye) Quit",
+                "Bye my friend!");
+    }
+
+    @Test
     void getResponse_taskCommands_updatesAndListsTasks() throws IOException {
         Files.deleteIfExists(DATA_FILE);
         try {
@@ -97,6 +106,15 @@ public class RamboTest {
         } finally {
             Files.deleteIfExists(DATA_FILE);
         }
+    }
+
+    @Test
+    void getWelcomeMessage_returnsCommandsToShowAtStartup() {
+        Rambo rambo = new Rambo();
+
+        assertTrue(rambo.getWelcomeMessage().contains("todo TASK_NAME"));
+        assertTrue(rambo.getWelcomeMessage().contains("deadline TASK_NAME /by YYYY-MM-DD"));
+        assertTrue(rambo.getWelcomeMessage().contains("bye"));
     }
 
     /**
