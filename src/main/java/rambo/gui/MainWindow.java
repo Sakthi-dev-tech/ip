@@ -1,5 +1,6 @@
 package rambo.gui;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
@@ -47,8 +48,7 @@ public class MainWindow {
      */
     public void setRambo(Rambo rambo) {
         this.rambo = rambo;
-        dialogContainer.getChildren().add(DialogBox.getRamboDialog(
-                "Hello! I am Rambo.\nWhat can I do for you?", ramboImage));
+        dialogContainer.getChildren().add(DialogBox.getRamboDialog(rambo.getWelcomeMessage(), ramboImage));
     }
 
     /**
@@ -68,8 +68,7 @@ public class MainWindow {
         userInput.clear();
 
         if (rambo.isExitRequested()) {
-            userInput.setDisable(true);
-            sendButton.setDisable(true);
+            Platform.exit();
         }
     }
 }

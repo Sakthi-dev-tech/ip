@@ -58,6 +58,15 @@ public class Rambo {
     }
 
     /**
+     * Returns the message shown when Rambo first starts.
+     *
+     * @return welcome message and command list
+     */
+    public String getWelcomeMessage() {
+        return "Hello! I am Rambo.\nWhat can I do for you?\n\n" + HELP_MESSAGE;
+    }
+
+    /**
      * Returns whether the user has asked to leave the GUI session.
      *
      * @return true if the GUI should stop accepting input
@@ -207,7 +216,7 @@ public class Rambo {
         + "3) List Tasks (use: 3 <keyword> to search)\n"
         + "4) Toggle Task Done Status\n"
         + "5) Delete Task\n"
-        + "q) Quit\n";
+        + "q or bye) Quit\n";
 
     Scanner scanner = new Scanner(System.in);
     Ui ui = new Ui(scanner);

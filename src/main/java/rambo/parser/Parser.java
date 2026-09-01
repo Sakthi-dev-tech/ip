@@ -17,11 +17,16 @@ public class Parser {
      * @throws RamboException if the input does not identify a command
      */
     public char parseCommand(String input) throws RamboException {
-        if (input.isEmpty()) {
+        String trimmedInput = input.trim();
+        if (trimmedInput.isEmpty()) {
             throw new RamboException("That option doesn't exist, my friend! Try again!");
         }
 
-        char command = input.charAt(0);
+        if (trimmedInput.equalsIgnoreCase("bye")) {
+            return 'q';
+        }
+
+        char command = trimmedInput.charAt(0);
         if (command != '1' && command != '2' && command != '3'
                 && command != '4' && command != '5' && command != 'q') {
             throw new RamboException("That option doesn't exist, my friend! Try again!");
