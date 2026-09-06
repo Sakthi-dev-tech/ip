@@ -1,5 +1,6 @@
 # UI Test Plan
 
+
 ## Test configuration
 
 - Build command: `rm -rf out && javac -d out $(find src/main/java -name '*.java')`

@@ -67,7 +67,7 @@ jar {
 }
 
 shadowJar {
-    archiveFileName = 'rambo.jar'
+    archiveFileName = 'Rambo.jar'
 }
 
 run {
