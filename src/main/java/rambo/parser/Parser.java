@@ -22,8 +22,16 @@ public class Parser {
             throw new RamboException("That option doesn't exist, my friend! Try again!");
         }
 
-        if (trimmedInput.equalsIgnoreCase("bye")) {
+        if (trimmedInput.equalsIgnoreCase("bye") || trimmedInput.equalsIgnoreCase("q")) {
             return 'q';
+        }
+
+        if (trimmedInput.startsWith("3 ")) {
+            return '3';
+        }
+
+        if (trimmedInput.length() != 1) {
+            throw new RamboException("That option doesn't exist, my friend! Try again!");
         }
 
         char command = trimmedInput.charAt(0);
@@ -72,9 +80,9 @@ public class Parser {
      */
     public String parseSearchTerm(String input) {
         assert input != null : "A parsed list command should not be null";
-        assert !input.isEmpty() && input.charAt(0) == '3'
+        assert !input.isEmpty() && input.trim().charAt(0) == '3'
                 : "A search term should only be extracted from a list command";
-        return input.substring(1).trim();
+        return input.trim().substring(1).trim();
     }
 
     /**
