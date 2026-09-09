@@ -46,16 +46,18 @@ public class StorageTest {
         DeadlineTask deadline = new DeadlineTask("submit report", "2026-09-15");
         EventTask event = new EventTask("project meeting", "2026-09-20", "2026-09-22");
         deadline.toggleDone();
+        todo.setPriorityLevel(1);
+        event.setPriorityLevel(3);
 
         storage.saveTasks(List.of(todo, deadline, event));
         List<Task> loadedTasks = storage.loadTasks();
 
         assertEquals(3, loadedTasks.size());
-        assertEquals("T||buy milk", loadedTasks.get(0).toDataString());
+        assertEquals("T||buy milk|1", loadedTasks.get(0).toDataString());
         assertInstanceOf(DeadlineTask.class, loadedTasks.get(1));
-        assertEquals("D|X|submit report|2026-09-15", loadedTasks.get(1).toDataString());
+        assertEquals("D|X|submit report|2026-09-15|0", loadedTasks.get(1).toDataString());
         assertInstanceOf(EventTask.class, loadedTasks.get(2));
-        assertEquals("E||project meeting|2026-09-20|2026-09-22", loadedTasks.get(2).toDataString());
+        assertEquals("E||project meeting|2026-09-20|2026-09-22|3", loadedTasks.get(2).toDataString());
     }
 
     @Test
@@ -74,7 +76,7 @@ public class StorageTest {
 
         storage.saveTasks(List.of(new Task("new task")));
 
-        assertEquals(List.of("T||new task"), Files.readAllLines(DATA_FILE));
+        assertEquals(List.of("T||new task|0"), Files.readAllLines(DATA_FILE));
     }
 
     @Test
@@ -88,6 +90,28 @@ public class StorageTest {
     @Test
     void loadTasks_invalidDoneMarker_throwsRamboException() throws IOException {
         writeTestData("T|DONE|buy milk");
+        Storage storage = new Storage();
+
+        assertThrows(RamboException.class, storage::loadTasks);
+    }
+
+    @Test
+    void loadTasks_legacyRecords_loadsTasksWithoutPriority() throws IOException {
+        writeTestData("T||buy milk\n"
+                + "D|X|submit report|2026-09-15\n"
+                + "E||project meeting|2026-09-20|2026-09-22");
+        Storage storage = new Storage();
+
+        List<Task> tasks = storage.loadTasks();
+
+        assertEquals(3, tasks.size());
+        assertTrue(tasks.stream().noneMatch(Task::hasPriority));
+        assertTrue(tasks.get(1).isDone());
+    }
+
+    @Test
+    void loadTasks_invalidPriority_throwsRamboException() throws IOException {
+        writeTestData("T||buy milk|4");
         Storage storage = new Storage();
 
         assertThrows(RamboException.class, storage::loadTasks);

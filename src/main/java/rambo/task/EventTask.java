@@ -32,7 +32,8 @@ public class EventTask extends Task {
      */
     @Override
     public String toDataString() {
-        return String.format("E|%s|%s|%s|%s", isDone() ? "X" : "", getTaskName(), fromDate, toDate);
+        return String.format("E|%s|%s|%s|%s|%d",
+                isDone() ? "X" : "", getTaskName(), fromDate, toDate, getPriorityLevel());
     }
 
     /**
@@ -42,8 +43,9 @@ public class EventTask extends Task {
      */
     @Override
     public String toString() {
-        return String.format("[E][%s] %s (from: %s to: %s)",
+        return String.format("[E][%s]%s %s (from: %s to: %s)",
                 isDone() ? "X" : "",
+                getPriorityTag(),
                 getTaskName(),
                 fromDate.format(DISPLAY_FORMAT),
                 toDate.format(DISPLAY_FORMAT));

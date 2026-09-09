@@ -25,6 +25,7 @@ public class Storage {
     private static final int TASK_NAME_INDEX = 2;
     private static final int FIRST_DATE_INDEX = 3;
     private static final int SECOND_DATE_INDEX = 4;
+    private static final int PRIORITY_FIELD_OFFSET = 1;
     private static final int TODO_FIELD_COUNT = 3;
     private static final int DEADLINE_FIELD_COUNT = 4;
     private static final int EVENT_FIELD_COUNT = 5;
@@ -120,6 +121,7 @@ public class Storage {
         assert task != null : "A recognised record type should create a task";
 
         restoreDoneStatus(task, fields[DONE_MARKER_INDEX], line);
+        restorePriority(task, fields, line);
         return task;
     }
 
@@ -164,8 +166,51 @@ public class Storage {
     }
 
     private void validateFieldCount(String[] fields, int expectedFieldCount, String line) {
-        if (fields.length != expectedFieldCount) {
+        if (fields.length != expectedFieldCount && fields.length != expectedFieldCount + PRIORITY_FIELD_OFFSET) {
             throw createInvalidRecordException(line);
+        }
+    }
+
+    /**
+     * Restores a priority from a new-format record while treating legacy records as unprioritized.
+     */
+    private void restorePriority(Task task, String[] fields, String line) {
+        int legacyFieldCount = getLegacyFieldCount(fields[TASK_TYPE_INDEX]);
+        if (fields.length == legacyFieldCount) {
+            return;
+        }
+
+        int priorityLevel;
+        try {
+            priorityLevel = Integer.parseInt(fields[fields.length - 1]);
+        } catch (NumberFormatException e) {
+            throw createInvalidRecordException(line);
+        }
+
+        if (priorityLevel == Task.NO_PRIORITY) {
+            return;
+        }
+
+        try {
+            task.setPriorityLevel(priorityLevel);
+        } catch (RamboException e) {
+            throw createInvalidRecordException(line);
+        }
+    }
+
+    /**
+     * Returns the number of fields used by the legacy format for a recognised task type.
+     */
+    private int getLegacyFieldCount(String taskType) {
+        switch (taskType) {
+            case "T":
+                return TODO_FIELD_COUNT;
+            case "D":
+                return DEADLINE_FIELD_COUNT;
+            case "E":
+                return EVENT_FIELD_COUNT;
+            default:
+                throw new AssertionError("Only recognised task types should reach priority restoration");
         }
     }
 

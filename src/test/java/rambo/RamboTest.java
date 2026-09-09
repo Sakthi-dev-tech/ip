@@ -75,6 +75,22 @@ public class RamboTest {
     }
 
     @Test
+    void run_setPriority_updatesSelectedTaskWithoutReordering() throws IOException {
+        String input = "2\n1\nbuy milk\n"
+                + "2\n1\nread book\n"
+                + "6\n2\n1\n"
+                + "3\nq\n";
+        String output = runRambo(input);
+
+        assertOutputContainsInOrder(output,
+                "Enter the index of the task you want to prioritize:",
+                "Enter a priority level from 1 (highest) to 3 (lowest):",
+                "1: [T][] buy milk",
+                "2: [T][][P1] read book",
+                "Bye my friend!");
+    }
+
+    @Test
     void run_endOfInputAtMainMenu_exitsCleanly() throws IOException {
         String output = runRambo("");
 
@@ -119,11 +135,28 @@ public class RamboTest {
     }
 
     @Test
+    void getResponse_priorityCommand_assignsAndReplacesPriority() throws IOException {
+        Files.deleteIfExists(DATA_FILE);
+        try {
+            Rambo rambo = new Rambo();
+            rambo.getResponse("todo buy milk");
+
+            assertTrue(rambo.getResponse("priority 1 1").contains("[T][][P1] buy milk"));
+            assertTrue(rambo.getResponse("priority 1 3").contains("[T][][P3] buy milk"));
+            assertTrue(rambo.getResponse("list").startsWith("1. [T][][P3] buy milk"));
+            assertTrue(rambo.getResponse("priority 1 4").contains("Priority level must be between 1 and 3"));
+        } finally {
+            Files.deleteIfExists(DATA_FILE);
+        }
+    }
+
+    @Test
     void getWelcomeMessage_returnsCommandsToShowAtStartup() {
         Rambo rambo = new Rambo();
 
         assertTrue(rambo.getWelcomeMessage().contains("todo TASK_NAME"));
         assertTrue(rambo.getWelcomeMessage().contains("deadline TASK_NAME /by YYYY-MM-DD"));
+        assertTrue(rambo.getWelcomeMessage().contains("priority TASK_NUMBER LEVEL"));
         assertTrue(rambo.getWelcomeMessage().contains("bye"));
     }
 

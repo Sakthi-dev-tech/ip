@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
 import rambo.exception.RamboException;
+import rambo.task.Task;
 
 /**
  * Interprets and validates input entered by the user.
@@ -36,7 +37,7 @@ public class Parser {
 
         char command = trimmedInput.charAt(0);
         if (command != '1' && command != '2' && command != '3'
-                && command != '4' && command != '5' && command != 'q') {
+                && command != '4' && command != '5' && command != '6' && command != 'q') {
             throw new RamboException("That option doesn't exist, my friend! Try again!");
         }
         return command;
@@ -70,6 +71,27 @@ public class Parser {
         } catch (NumberFormatException e) {
             throw new RamboException("Give me a valid number!", e);
         }
+    }
+
+    /**
+     * Parses and validates a task priority level.
+     *
+     * @param input user input to parse
+     * @return a priority level from 1 (highest) to 3 (lowest)
+     * @throws RamboException if the input is not a supported priority level
+     */
+    public int parsePriorityLevel(String input) throws RamboException {
+        int priorityLevel;
+        try {
+            priorityLevel = Integer.parseInt(input);
+        } catch (NumberFormatException e) {
+            throw new RamboException("Give me a valid priority level from 1 to 3!", e);
+        }
+
+        if (priorityLevel < Task.MIN_PRIORITY_LEVEL || priorityLevel > Task.MAX_PRIORITY_LEVEL) {
+            throw new RamboException("Priority level must be between 1 and 3!");
+        }
+        return priorityLevel;
     }
 
     /**

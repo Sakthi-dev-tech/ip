@@ -49,6 +49,19 @@ public class TaskList {
     }
 
     /**
+     * Assigns a priority level to a task.
+     *
+     * @param taskNumber one-based task number shown to the user
+     * @param priorityLevel priority level from 1 (highest) to 3 (lowest)
+     * @throws RamboException if the task number or priority level is invalid
+     */
+    public void setPriority(int taskNumber, int priorityLevel) throws RamboException {
+        Task task = getTask(taskNumber);
+        task.setPriorityLevel(priorityLevel);
+        assert task.getPriorityLevel() == priorityLevel : "The selected task should receive the requested priority";
+    }
+
+    /**
      * Deletes a task from the list.
      *
      * @param taskNumber one-based task number shown to the user

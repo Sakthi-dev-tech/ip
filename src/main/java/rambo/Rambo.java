@@ -25,6 +25,7 @@ public class Rambo {
             + "deadline TASK_NAME /by YYYY-MM-DD\n"
             + EVENT_USAGE + "\n"
             + "done TASK_NUMBER\n"
+            + "priority TASK_NUMBER LEVEL (1 is highest)\n"
             + "delete TASK_NUMBER\n"
             + "bye";
     private static final String CLI_OPTIONS = "1) Echo\n"
@@ -32,6 +33,7 @@ public class Rambo {
             + "3) List Tasks (use: 3 <keyword> to search)\n"
             + "4) Toggle Task Done Status\n"
             + "5) Delete Task\n"
+            + "6) Set Task Priority\n"
             + "q or bye) Quit\n";
     private static final String TASK_TYPE_OPTIONS = "1) Todo\n"
             + "2) Deadline\n"
@@ -122,6 +124,9 @@ public class Rambo {
         if (lowerCaseInput.startsWith("delete ")) {
             return deleteTask(input.substring("delete".length()).trim());
         }
+        if (lowerCaseInput.startsWith("priority ")) {
+            return setTaskPriority(input.substring("priority".length()).trim());
+        }
 
         throw new RamboException("I do not understand that command.\n" + HELP_MESSAGE);
     }
@@ -164,6 +169,19 @@ public class Rambo {
         taskList.delete(taskNumber);
         storage.saveTasks(taskList.getTasks());
         return "Noted. I've removed this task:\n  " + taskToDelete;
+    }
+
+    private String setTaskPriority(String taskDetails) throws RamboException {
+        String[] fields = taskDetails.split("\\s+");
+        if (fields.length != 2) {
+            throw new RamboException("Use: priority TASK_NUMBER LEVEL (1-3)");
+        }
+
+        int taskNumber = parser.parseTaskNumber(fields[0]);
+        int priorityLevel = parser.parsePriorityLevel(fields[1]);
+        taskList.setPriority(taskNumber, priorityLevel);
+        storage.saveTasks(taskList.getTasks());
+        return "Got it. I've updated this task's priority:\n  " + taskList.getTask(taskNumber);
     }
 
     private String getTaskListResponse(String searchTerm) {
@@ -273,6 +291,9 @@ public class Rambo {
             case '5':
                 deleteTaskFromCli(ui);
                 break;
+            case '6':
+                setTaskPriorityFromCli(ui);
+                break;
             case 'q':
                 return false;
             default:
@@ -363,6 +384,16 @@ public class Rambo {
         int taskNumber = parser.parseTaskNumber(ui.readLine());
         taskList.delete(taskNumber);
         storage.saveTasks(taskList.getTasks());
+    }
+
+    private void setTaskPriorityFromCli(Ui ui) {
+        ui.showPrompt("Enter the index of the task you want to prioritize: ");
+        int taskNumber = parser.parseTaskNumber(ui.readLine());
+        ui.showPrompt("Enter a priority level from 1 (highest) to 3 (lowest): ");
+        int priorityLevel = parser.parsePriorityLevel(ui.readLine());
+        taskList.setPriority(taskNumber, priorityLevel);
+        storage.saveTasks(taskList.getTasks());
+        ui.showLine(Constants.ANSI_GREEN + "\nYour task's priority has been updated!" + Constants.ANSI_RESET);
     }
 
     private static void showError(Ui ui, RamboException exception) {

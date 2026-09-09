@@ -29,7 +29,8 @@ public class DeadlineTask extends Task {
      */
     @Override
     public String toDataString() {
-        return String.format("D|%s|%s|%s", isDone() ? "X" : "", getTaskName(), deadline);
+        return String.format("D|%s|%s|%s|%d",
+                isDone() ? "X" : "", getTaskName(), deadline, getPriorityLevel());
     }
 
     /**
@@ -39,7 +40,7 @@ public class DeadlineTask extends Task {
      */
     @Override
     public String toString() {
-        return String.format("[D][%s] %s (by: %s)",
-                isDone() ? "X" : "", getTaskName(), deadline.format(DISPLAY_FORMAT));
+        return String.format("[D][%s]%s %s (by: %s)",
+                isDone() ? "X" : "", getPriorityTag(), getTaskName(), deadline.format(DISPLAY_FORMAT));
     }
 }

@@ -75,6 +75,26 @@ public class TaskListTest {
     }
 
     @Test
+    void setPriority_validTaskNumber_updatesSelectedTask() {
+        Task firstTask = new Task("buy milk");
+        Task secondTask = new Task("read book");
+        TaskList taskList = new TaskList(List.of(firstTask, secondTask));
+
+        taskList.setPriority(2, 1);
+
+        assertFalse(firstTask.hasPriority());
+        assertEquals(1, secondTask.getPriorityLevel());
+    }
+
+    @Test
+    void setPriority_invalidTaskNumberOrLevel_throwsRamboException() {
+        TaskList taskList = new TaskList(List.of(new Task("buy milk")));
+
+        assertThrows(RamboException.class, () -> taskList.setPriority(2, 1));
+        assertThrows(RamboException.class, () -> taskList.setPriority(1, 4));
+    }
+
+    @Test
     void delete_validOneBasedTaskNumber_removesSelectedTask() {
         TaskList taskList = new TaskList(List.of(new Task("buy milk"), new Task("read book")));
 

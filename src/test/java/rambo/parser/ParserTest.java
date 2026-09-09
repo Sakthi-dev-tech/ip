@@ -42,6 +42,11 @@ public class ParserTest {
     }
 
     @Test
+    void parseCommand_priorityMenuOption_returnsPriorityCommandCharacter() {
+        assertEquals('6', parser.parseCommand("6"));
+    }
+
+    @Test
     void parseCommand_blankInput_throwsRamboException() {
         assertThrows(RamboException.class, () -> parser.parseCommand(""));
     }
@@ -64,6 +69,19 @@ public class ParserTest {
     @Test
     void parseTaskNumber_nonNumericInput_throwsRamboException() {
         assertThrows(RamboException.class, () -> parser.parseTaskNumber("first"));
+    }
+
+    @Test
+    void parsePriorityLevel_supportedLevel_returnsLevel() {
+        assertEquals(1, parser.parsePriorityLevel("1"));
+        assertEquals(3, parser.parsePriorityLevel("3"));
+    }
+
+    @Test
+    void parsePriorityLevel_invalidInput_throwsRamboException() {
+        assertThrows(RamboException.class, () -> parser.parsePriorityLevel("high"));
+        assertThrows(RamboException.class, () -> parser.parsePriorityLevel("0"));
+        assertThrows(RamboException.class, () -> parser.parsePriorityLevel("4"));
     }
 
     @Test
