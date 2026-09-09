@@ -17,6 +17,9 @@ public class TaskList {
      * @param tasks initial tasks in the list
      */
     public TaskList(List<Task> tasks) {
+        assert tasks != null : "The initial task list should not be null";
+        assert tasks.stream().allMatch(task -> task != null)
+                : "The initial task list should not contain null tasks";
         this.tasks = new ArrayList<>(tasks);
     }
 
@@ -26,7 +29,10 @@ public class TaskList {
      * @param task task to add
      */
     public void add(Task task) {
+        assert task != null : "Only valid task objects should be added";
+        int previousSize = tasks.size();
         tasks.add(task);
+        assert tasks.size() == previousSize + 1 : "Adding a task should increase the list size by one";
     }
 
     /**
@@ -36,7 +42,10 @@ public class TaskList {
      * @throws RamboException if the task number does not exist
      */
     public void toggle(int taskNumber) throws RamboException {
-        tasks.get(getIndex(taskNumber)).toggleDone();
+        Task task = tasks.get(getIndex(taskNumber));
+        boolean wasDone = task.isDone();
+        task.toggleDone();
+        assert task.isDone() != wasDone : "Toggling a task should invert its done status";
     }
 
     /**
@@ -46,7 +55,9 @@ public class TaskList {
      * @throws RamboException if the task number does not exist
      */
     public void delete(int taskNumber) throws RamboException {
+        int previousSize = tasks.size();
         tasks.remove(getIndex(taskNumber));
+        assert tasks.size() == previousSize - 1 : "Deleting a task should reduce the list size by one";
     }
 
     /**
@@ -66,6 +77,7 @@ public class TaskList {
         if (index < 0 || index >= tasks.size()) {
             throw new RamboException("I cannot find this task! Give a valid index!");
         }
+        assert index >= 0 && index < tasks.size() : "A validated task number should map to a valid index";
         return index;
     }
 }
