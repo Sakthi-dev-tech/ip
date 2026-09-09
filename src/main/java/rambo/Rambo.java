@@ -155,12 +155,12 @@ public class Rambo {
         int taskNumber = parser.parseTaskNumber(taskNumberText);
         taskList.toggle(taskNumber);
         storage.saveTasks(taskList.getTasks());
-        return "Nice! I've updated this task:\n  " + getTask(taskNumber);
+        return "Nice! I've updated this task:\n  " + taskList.getTask(taskNumber);
     }
 
     private String deleteTask(String taskNumberText) throws RamboException {
         int taskNumber = parser.parseTaskNumber(taskNumberText);
-        Task taskToDelete = getTask(taskNumber);
+        Task taskToDelete = taskList.getTask(taskNumber);
         taskList.delete(taskNumber);
         storage.saveTasks(taskList.getTasks());
         return "Noted. I've removed this task:\n  " + taskToDelete;
@@ -190,15 +190,6 @@ public class Rambo {
     private String getAddedTaskResponse(Task task) {
         return String.format("Got it. I've added this task:%n  %s%nNow you have %d task(s) in the list.",
                 task, taskList.getTasks().size());
-    }
-
-    private Task getTask(int taskNumber) throws RamboException {
-        int index = taskNumber - 1;
-        List<Task> tasksList = taskList.getTasks();
-        if (index < 0 || index >= tasksList.size()) {
-            throw new RamboException("I cannot find this task! Give a valid index!");
-        }
-        return tasksList.get(index);
     }
 
     private String[] splitRequiredMarker(String input, String marker, String usageMessage) throws RamboException {
