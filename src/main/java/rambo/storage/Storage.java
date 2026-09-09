@@ -18,6 +18,17 @@ import rambo.task.Task;
  * Loads tasks from a file and saves tasks to that file.
  */
 public class Storage {
+    private static final String DONE_MARKER = "X";
+    private static final String FIELD_SEPARATOR_REGEX = "\\|";
+    private static final int TASK_TYPE_INDEX = 0;
+    private static final int DONE_MARKER_INDEX = 1;
+    private static final int TASK_NAME_INDEX = 2;
+    private static final int FIRST_DATE_INDEX = 3;
+    private static final int SECOND_DATE_INDEX = 4;
+    private static final int TODO_FIELD_COUNT = 3;
+    private static final int DEADLINE_FIELD_COUNT = 4;
+    private static final int EVENT_FIELD_COUNT = 5;
+
     private final Path dataFile;
 
     /**
@@ -92,45 +103,75 @@ public class Storage {
      * Converts one data-file record into a task.
      */
     private Task createTask(String line) throws RamboException {
-        String[] fields = line.split("\\|");
-        for (int i = 0; i < fields.length; i++) {
-            fields[i] = fields[i].trim();
-        }
+        String[] fields = parseFields(line);
 
         Task task;
-        switch (fields[0]) {
+        switch (fields[TASK_TYPE_INDEX]) {
             case "T":
-                if (fields.length != 3) {
-                    throw new RamboException("Invalid task record: " + line);
-                }
-                task = new Task(fields[2]);
+                task = createTodoTask(fields, line);
                 break;
             case "D":
-                if (fields.length != 4) {
-                    throw new RamboException("Invalid task record: " + line);
-                }
-                task = new DeadlineTask(fields[2], fields[3]);
+                task = createDeadlineTask(fields, line);
                 break;
             case "E":
-                if (fields.length != 5) {
-                    throw new RamboException("Invalid task record: " + line);
-                }
-                task = new EventTask(fields[2], fields[3], fields[4]);
+                task = createEventTask(fields, line);
                 break;
             default:
-                throw new RamboException("Invalid task record: " + line);
+                throw createInvalidRecordException(line);
         }
         assert task != null : "A recognised record type should create a task";
 
-        if (!fields[1].isEmpty() && !fields[1].equals("X")) {
-            throw new RamboException("Invalid task record: " + line);
+        restoreDoneStatus(task, fields[DONE_MARKER_INDEX], line);
+        return task;
+    }
+
+    private String[] parseFields(String line) {
+        String[] fields = line.split(FIELD_SEPARATOR_REGEX);
+        for (int i = 0; i < fields.length; i++) {
+            fields[i] = fields[i].trim();
+        }
+        return fields;
+    }
+
+    private void restoreDoneStatus(Task task, String doneMarker, String line) {
+        if (!doneMarker.isEmpty() && !doneMarker.equals(DONE_MARKER)) {
+            throw createInvalidRecordException(line);
         }
 
-        if (fields[1].equals("X")) {
+        if (doneMarker.equals(DONE_MARKER)) {
             task.toggleDone();
             assert task.isDone() : "A stored done marker should produce a completed task";
         }
+    }
 
-        return task;
+    private Task createTodoTask(String[] fields, String line) {
+        validateFieldCount(fields, TODO_FIELD_COUNT, line);
+        String taskName = fields[TASK_NAME_INDEX];
+        return new Task(taskName);
+    }
+
+    private Task createDeadlineTask(String[] fields, String line) {
+        validateFieldCount(fields, DEADLINE_FIELD_COUNT, line);
+        String taskName = fields[TASK_NAME_INDEX];
+        String deadline = fields[FIRST_DATE_INDEX];
+        return new DeadlineTask(taskName, deadline);
+    }
+
+    private Task createEventTask(String[] fields, String line) {
+        validateFieldCount(fields, EVENT_FIELD_COUNT, line);
+        String taskName = fields[TASK_NAME_INDEX];
+        String fromDate = fields[FIRST_DATE_INDEX];
+        String toDate = fields[SECOND_DATE_INDEX];
+        return new EventTask(taskName, fromDate, toDate);
+    }
+
+    private void validateFieldCount(String[] fields, int expectedFieldCount, String line) {
+        if (fields.length != expectedFieldCount) {
+            throw createInvalidRecordException(line);
+        }
+    }
+
+    private RamboException createInvalidRecordException(String line) {
+        return new RamboException("Invalid task record: " + line);
     }
 }
