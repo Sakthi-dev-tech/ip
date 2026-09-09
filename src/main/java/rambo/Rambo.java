@@ -27,6 +27,15 @@ public class Rambo {
             + "done TASK_NUMBER\n"
             + "delete TASK_NUMBER\n"
             + "bye";
+    private static final String CLI_OPTIONS = "1) Echo\n"
+            + "2) Add Task\n"
+            + "3) List Tasks (use: 3 <keyword> to search)\n"
+            + "4) Toggle Task Done Status\n"
+            + "5) Delete Task\n"
+            + "q or bye) Quit\n";
+    private static final String TASK_TYPE_OPTIONS = "1) Todo\n"
+            + "2) Deadline\n"
+            + "3) Event\n";
 
     private final Parser parser;
     private final Storage storage;
@@ -213,203 +222,155 @@ public class Rambo {
         }
     }
 
-  public static void main(String[] args) {
-    String options = "1) Echo\n"
-        + "2) Add Task\n"
-        + "3) List Tasks (use: 3 <keyword> to search)\n"
-        + "4) Toggle Task Done Status\n"
-        + "5) Delete Task\n"
-        + "q or bye) Quit\n";
+    /**
+     * Starts the command-line version of Rambo.
+     *
+     * @param args command-line arguments, which are not used
+     */
+    public static void main(String[] args) {
+        Ui ui = new Ui(new Scanner(System.in));
+        ui.showWelcome();
 
-    Scanner scanner = new Scanner(System.in);
-    Ui ui = new Ui(scanner);
-    Parser parser = new Parser();
-    Storage storage = new Storage();
-
-    // When I first start this program, I would like to greet first
-    ui.showWelcome();
-
-    TaskList taskList;
-    try {
-      taskList = new TaskList(storage.loadTasks());
-    } catch (RamboException e) {
-      ui.showLine(Constants.ANSI_RED + e.getMessage() + Constants.ANSI_RESET);
-      ui.showGoodbye();
-      ui.close();
-      return;
+        try {
+            new Rambo().runCommandLineInterface(ui);
+        } catch (RamboException e) {
+            showError(ui, e);
+        } finally {
+            ui.close();
+            ui.showGoodbye();
+        }
     }
 
-    boolean isChatRunning = true;
+    private void runCommandLineInterface(Ui ui) {
+        boolean isChatRunning = true;
+        while (isChatRunning) {
+            showMainMenu(ui);
+            if (!ui.hasNextLine()) {
+                break;
+            }
+            String input = ui.readLine();
+            try {
+                char command = parser.parseCommand(input);
+                isChatRunning = executeCliCommand(command, input, ui);
+            } catch (RamboException e) {
+                showError(ui, e);
+            }
+        }
+    }
 
-    while (isChatRunning) {
-      // Show the options to the users
-      ui.showDivider();
+    private void showMainMenu(Ui ui) {
+        ui.showDivider();
+        ui.showLine(CLI_OPTIONS);
+        ui.showLine("\n");
+        ui.showPrompt("Enter your option: ");
+    }
 
-      ui.showLine(options);
-      ui.showLine("\n");
-
-      ui.showPrompt("Enter your option: ");
-      if (!ui.hasNextLine()) {
-        break;
-      }
-
-      String input = ui.readLine();
-      try {
-        char userOpt = parser.parseCommand(input);
-
-        switch (userOpt) {
-          // Echo Selected
-          case '1': {
-            // Start the loop for echo app
+    private boolean executeCliCommand(char command, String input, Ui ui) {
+        switch (command) {
+        case '1':
             Echo.start(ui);
             break;
-          }
-
-          // Adding task has been chosen
-          case '2': {
-            ui.showDivider("TASK TYPE");
-            ui.showLine("1) Todo\n"
-                + "2) Deadline\n"
-                + "3) Event\n");
-            ui.showLine("\n");
-
-            ui.showPrompt("Choose the type of task you want to add: ");
-
-            int typeOfTask = parser.parseTaskType(ui.readLine());
-
-            Task taskToBeAdded = null;
-
-            /*
-             * This will dictate the type of task the user chooses
-             */
-            switch (typeOfTask) {
-              case 1: {
-                ui.showPrompt("Enter your task name: ");
-                String taskName = ui.readLine();
-
-                if (taskName.isBlank()) {
-                  throw new RamboException("Task name cannot be blank!");
-                }
-                taskToBeAdded = new Task(taskName);
-                break;
-              }
-
-              case 2: {
-                ui.showPrompt("Enter your task name: ");
-                String taskName = ui.readLine();
-                if (taskName.isBlank()) {
-                  throw new RamboException("Task name cannot be blank!");
-                }
-
-                ui.showPrompt("Enter your deadline: ");
-                String deadline = ui.readLine();
-                if (deadline.isBlank()) {
-                  throw new RamboException("Deadline cannot be blank!");
-                }
-
-                taskToBeAdded = new DeadlineTask(taskName, deadline);
-                break;
-              }
-
-              case 3: {
-                ui.showPrompt("Enter your task name: ");
-                String taskName = ui.readLine();
-                if (taskName.isBlank()) {
-                  throw new RamboException("Task name cannot be blank!");
-                }
-
-                ui.showPrompt("Enter your from date: ");
-                String from = ui.readLine();
-                if (from.isBlank()) {
-                  throw new RamboException("From date cannot be blank!");
-                }
-
-                ui.showPrompt("Enter your to date: ");
-                String to = ui.readLine();
-                if (to.isBlank()) {
-                  throw new RamboException("To date cannot be blank!");
-                }
-
-                taskToBeAdded = new EventTask(taskName, from, to);
-                break;
-              }
-
-              default: {
-                throw new RamboException("Not a valid task type!");
-              }
-            }
-
-            assert taskToBeAdded != null : "A valid task type should create a task";
-            taskList.add(taskToBeAdded);
-            storage.saveTasks(taskList.getTasks());
-            ui.showLine(Constants.ANSI_GREEN + "\nYour task has been added!" + Constants.ANSI_RESET);
-
+        case '2':
+            addTaskFromCli(ui);
             break;
-          }
-
-          // List out current saved tasks
-          case '3': {
-            ui.showDivider("TASK LIST");
-
-            List<Task> tasksList = taskList.getTasks();
-            String searchTerm = parser.parseSearchTerm(input);
-            String normalisedSearchTerm = searchTerm.toLowerCase(Locale.ROOT);
-            boolean foundMatchingTask = false;
-
-            for (int i = 0; i < tasksList.size(); i++) {
-              Task task = tasksList.get(i);
-              if (searchTerm.isEmpty()
-                  || task.getTaskName().toLowerCase(Locale.ROOT).contains(normalisedSearchTerm)) {
-                ui.showLine(String.format("%d: %s", i + 1, task.toString()));
-                foundMatchingTask = true;
-              }
-            }
-
-            if (!searchTerm.isEmpty() && !foundMatchingTask) {
-              ui.showLine(String.format("No tasks found matching \"%s\".", searchTerm));
-            }
-
+        case '3':
+            showTasks(ui, parser.parseSearchTerm(input));
             break;
-          }
-
-          // Toggle if task is done or not
-          case '4': {
-            ui.showPrompt("Enter the index of the task you want to toggle status of: ");
-            int index = parser.parseTaskNumber(ui.readLine());
-
-            taskList.toggle(index);
-            storage.saveTasks(taskList.getTasks());
-
+        case '4':
+            toggleTaskFromCli(ui);
             break;
-          }
-
-          // Delete task has been selected
-          case '5': {
-            ui.showPrompt("Enter the index of the task you want to remove: ");
-            int index = parser.parseTaskNumber(ui.readLine());
-
-            taskList.delete(index);
-            storage.saveTasks(taskList.getTasks());
-
+        case '5':
+            deleteTaskFromCli(ui);
             break;
-          }
-
-          // Quit the loop
-          case 'q': {
-            isChatRunning = false;
-            break;
-          }
-          default: {
+        case 'q':
+            return false;
+        default:
             throw new RamboException("That option doesn't exist, my friend! Try again!");
-          }
         }
-        // All RamboExceptions will be caught here
-      } catch (RamboException e) {
-        ui.showLine(Constants.ANSI_RED + e.getMessage() + Constants.ANSI_RESET);
-      }
+        return true;
     }
 
-    ui.close();
-    ui.showGoodbye();
-  }
+    private void addTaskFromCli(Ui ui) {
+        ui.showDivider("TASK TYPE");
+        ui.showLine(TASK_TYPE_OPTIONS);
+        ui.showLine("\n");
+        ui.showPrompt("Choose the type of task you want to add: ");
+
+        int taskType = parser.parseTaskType(ui.readLine());
+        Task task = createTaskFromCli(taskType, ui);
+        taskList.add(task);
+        storage.saveTasks(taskList.getTasks());
+        ui.showLine(Constants.ANSI_GREEN + "\nYour task has been added!" + Constants.ANSI_RESET);
+    }
+
+    private Task createTaskFromCli(int taskType, Ui ui) {
+        switch (taskType) {
+        case 1:
+            return new Task(readRequiredField(ui, "Enter your task name: ", "Task name cannot be blank!"));
+        case 2:
+            return createDeadlineFromCli(ui);
+        case 3:
+            return createEventFromCli(ui);
+        default:
+            throw new RamboException("Not a valid task type!");
+        }
+    }
+
+    private Task createDeadlineFromCli(Ui ui) {
+        String taskName = readRequiredField(ui, "Enter your task name: ", "Task name cannot be blank!");
+        String deadline = readRequiredField(ui, "Enter your deadline: ", "Deadline cannot be blank!");
+        return new DeadlineTask(taskName, deadline);
+    }
+
+    private Task createEventFromCli(Ui ui) {
+        String taskName = readRequiredField(ui, "Enter your task name: ", "Task name cannot be blank!");
+        String fromDate = readRequiredField(ui, "Enter your from date: ", "From date cannot be blank!");
+        String toDate = readRequiredField(ui, "Enter your to date: ", "To date cannot be blank!");
+        return new EventTask(taskName, fromDate, toDate);
+    }
+
+    private String readRequiredField(Ui ui, String prompt, String errorMessage) {
+        ui.showPrompt(prompt);
+        String value = ui.readLine();
+        validateNotBlank(value, errorMessage);
+        return value;
+    }
+
+    private void showTasks(Ui ui, String searchTerm) {
+        ui.showDivider("TASK LIST");
+        String normalisedSearchTerm = searchTerm.toLowerCase(Locale.ROOT);
+        boolean hasMatchingTask = false;
+
+        List<Task> tasks = taskList.getTasks();
+        for (int i = 0; i < tasks.size(); i++) {
+            Task task = tasks.get(i);
+            if (searchTerm.isEmpty()
+                    || task.getTaskName().toLowerCase(Locale.ROOT).contains(normalisedSearchTerm)) {
+                ui.showLine(String.format("%d: %s", i + 1, task));
+                hasMatchingTask = true;
+            }
+        }
+
+        if (!searchTerm.isEmpty() && !hasMatchingTask) {
+            ui.showLine(String.format("No tasks found matching \"%s\".", searchTerm));
+        }
+    }
+
+    private void toggleTaskFromCli(Ui ui) {
+        ui.showPrompt("Enter the index of the task you want to toggle status of: ");
+        int taskNumber = parser.parseTaskNumber(ui.readLine());
+        taskList.toggle(taskNumber);
+        storage.saveTasks(taskList.getTasks());
+    }
+
+    private void deleteTaskFromCli(Ui ui) {
+        ui.showPrompt("Enter the index of the task you want to remove: ");
+        int taskNumber = parser.parseTaskNumber(ui.readLine());
+        taskList.delete(taskNumber);
+        storage.saveTasks(taskList.getTasks());
+    }
+
+    private static void showError(Ui ui, RamboException exception) {
+        ui.showLine(Constants.ANSI_RED + exception.getMessage() + Constants.ANSI_RESET);
+    }
 }
