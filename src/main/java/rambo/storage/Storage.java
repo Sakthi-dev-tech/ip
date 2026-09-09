@@ -32,9 +32,7 @@ public class Storage {
     private final Path dataFile;
 
     /**
-     * Creates a storage manager for the given file path.
-     *
-     * @param filePath path of the task data file
+     * Creates a storage manager for the application's default task data file.
      */
     public Storage() {
         this.dataFile = Paths.get("./data/Rambo.txt");
