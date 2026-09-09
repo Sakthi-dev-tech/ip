@@ -167,16 +167,16 @@ public class Rambo {
     }
 
     private String getTaskListResponse(String searchTerm) {
-        List<Task> tasksList = taskList.getTasks();
-        if (tasksList.isEmpty()) {
+        List<Task> tasks = taskList.getTasks();
+        if (tasks.isEmpty()) {
             return "Your task list is empty.";
         }
 
         StringBuilder response = new StringBuilder();
         String normalisedSearchTerm = searchTerm.toLowerCase(Locale.ROOT);
-        for (int i = 0; i < tasksList.size(); i++) {
-            Task task = tasksList.get(i);
-            if (searchTerm.isEmpty() || task.getTaskName().toLowerCase(Locale.ROOT).contains(normalisedSearchTerm)) {
+        for (int i = 0; i < tasks.size(); i++) {
+            Task task = tasks.get(i);
+            if (isMatchingSearchTerm(task, normalisedSearchTerm)) {
                 response.append(i + 1).append(". ").append(task).append(System.lineSeparator());
             }
         }
@@ -344,8 +344,7 @@ public class Rambo {
         List<Task> tasks = taskList.getTasks();
         for (int i = 0; i < tasks.size(); i++) {
             Task task = tasks.get(i);
-            if (searchTerm.isEmpty()
-                    || task.getTaskName().toLowerCase(Locale.ROOT).contains(normalisedSearchTerm)) {
+            if (isMatchingSearchTerm(task, normalisedSearchTerm)) {
                 ui.showLine(String.format("%d: %s", i + 1, task));
                 hasMatchingTask = true;
             }
@@ -354,6 +353,11 @@ public class Rambo {
         if (!searchTerm.isEmpty() && !hasMatchingTask) {
             ui.showLine(String.format("No tasks found matching \"%s\".", searchTerm));
         }
+    }
+
+    private boolean isMatchingSearchTerm(Task task, String normalisedSearchTerm) {
+        String normalisedTaskName = task.getTaskName().toLowerCase(Locale.ROOT);
+        return normalisedSearchTerm.isEmpty() || normalisedTaskName.contains(normalisedSearchTerm);
     }
 
     private void toggleTaskFromCli(Ui ui) {
