@@ -50,6 +50,7 @@ public class Rambo {
      * @return response to show in the chat window
      */
     public String getResponse(String input) {
+        assert input != null : "GUI input should never be null";
         try {
             return executeGuiCommand(input.trim());
         } catch (RamboException e) {
@@ -201,6 +202,8 @@ public class Rambo {
         String afterMarker = input.substring(markerIndex + marker.length()).trim();
         validateNotBlank(beforeMarker, usageMessage);
         validateNotBlank(afterMarker, usageMessage);
+        assert !beforeMarker.isBlank() && !afterMarker.isBlank()
+                : "Validated command fields should be non-blank";
         return new String[] { beforeMarker, afterMarker };
     }
 
@@ -336,6 +339,7 @@ public class Rambo {
               }
             }
 
+            assert taskToBeAdded != null : "A valid task type should create a task";
             taskList.add(taskToBeAdded);
             storage.saveTasks(taskList.getTasks());
             ui.showLine(Constants.ANSI_GREEN + "\nYour task has been added!" + Constants.ANSI_RESET);

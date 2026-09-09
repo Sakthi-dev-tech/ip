@@ -38,6 +38,8 @@ public class MainWindow {
      */
     @FXML
     public void initialize() {
+        assert scrollPane != null : "FXML loader should inject the scroll pane";
+        assert dialogContainer != null : "FXML loader should inject the dialog container";
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
     }
 
@@ -47,6 +49,7 @@ public class MainWindow {
      * @param rambo chatbot instance
      */
     public void setRambo(Rambo rambo) {
+        assert rambo != null : "The application should inject a Rambo instance";
         this.rambo = rambo;
         dialogContainer.getChildren().add(DialogBox.getRamboDialog(rambo.getWelcomeMessage(), ramboImage));
     }
@@ -56,6 +59,7 @@ public class MainWindow {
      */
     @FXML
     public void handleUserInput() {
+        assert rambo != null : "Rambo should be injected before input is handled";
         String input = userInput.getText();
         if (input.isBlank()) {
             return;

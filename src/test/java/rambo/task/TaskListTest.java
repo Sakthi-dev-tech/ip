@@ -28,12 +28,24 @@ public class TaskListTest {
     }
 
     @Test
+    void constructor_nullInitialList_throwsAssertionError() {
+        assertThrows(AssertionError.class, () -> new TaskList(null));
+    }
+
+    @Test
     void add_task_appendsTask() {
         TaskList taskList = new TaskList(List.of());
 
         taskList.add(new Task("buy milk"));
 
         assertEquals("buy milk", taskList.getTasks().get(0).getTaskName());
+    }
+
+    @Test
+    void add_nullTask_throwsAssertionError() {
+        TaskList taskList = new TaskList(List.of());
+
+        assertThrows(AssertionError.class, () -> taskList.add(null));
     }
 
     @Test

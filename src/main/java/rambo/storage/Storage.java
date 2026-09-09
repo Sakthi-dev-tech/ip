@@ -67,6 +67,9 @@ public class Storage {
      * @throws RamboException if the data file cannot be written
      */
     public void saveTasks(List<Task> tasks) throws RamboException {
+        assert tasks != null : "The task list supplied by the application should not be null";
+        assert tasks.stream().allMatch(task -> task != null)
+                : "The task list supplied by the application should not contain null tasks";
         List<String> records = new ArrayList<>();
         for (Task task : tasks) {
             records.add(task.toDataString());
@@ -117,6 +120,7 @@ public class Storage {
         default:
             throw new RamboException("Invalid task record: " + line);
         }
+        assert task != null : "A recognised record type should create a task";
 
         if (!fields[1].isEmpty() && !fields[1].equals("X")) {
             throw new RamboException("Invalid task record: " + line);
@@ -124,6 +128,7 @@ public class Storage {
 
         if (fields[1].equals("X")) {
             task.toggleDone();
+            assert task.isDone() : "A stored done marker should produce a completed task";
         }
 
         return task;

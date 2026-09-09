@@ -71,6 +71,9 @@ public class Parser {
      * @return the search term, or an empty string if none was supplied
      */
     public String parseSearchTerm(String input) {
+        assert input != null : "A parsed list command should not be null";
+        assert !input.isEmpty() && input.charAt(0) == '3'
+                : "A search term should only be extracted from a list command";
         return input.substring(1).trim();
     }
 
