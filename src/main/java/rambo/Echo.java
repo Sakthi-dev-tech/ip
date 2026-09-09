@@ -19,6 +19,9 @@ public class Echo {
     intro(ui);
     while (true) {
       ui.showPrompt("You: ");
+      if (!ui.hasNextLine()) {
+        return;
+      }
       String userText = ui.readLine();
 
       // If I am exiting, I would like to break the loop
