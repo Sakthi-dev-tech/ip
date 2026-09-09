@@ -31,6 +31,17 @@ public class ParserTest {
     }
 
     @Test
+    void parseCommand_validCommandWithTrailingText_throwsRamboException() {
+        assertThrows(RamboException.class, () -> parser.parseCommand("10"));
+        assertThrows(RamboException.class, () -> parser.parseCommand("q anything"));
+    }
+
+    @Test
+    void parseCommand_listCommandWithSearchTerm_returnsListCommandCharacter() {
+        assertEquals('3', parser.parseCommand("3 milk"));
+    }
+
+    @Test
     void parseCommand_blankInput_throwsRamboException() {
         assertThrows(RamboException.class, () -> parser.parseCommand(""));
     }

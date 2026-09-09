@@ -84,6 +84,16 @@ public class RamboTest {
     }
 
     @Test
+    void run_endOfInputInEchoMode_exitsCleanly() throws IOException {
+        String output = runRambo("1\n");
+
+        assertOutputContainsInOrder(output,
+                "Welcome to Echo!",
+                "You:",
+                "Bye my friend!");
+    }
+
+    @Test
     void run_byeAtMainMenu_exitsCleanly() throws IOException {
         String output = runRambo("bye\n");
 

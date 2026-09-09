@@ -42,7 +42,7 @@ public class TaskList {
      * @throws RamboException if the task number does not exist
      */
     public void toggle(int taskNumber) throws RamboException {
-        Task task = tasks.get(getIndex(taskNumber));
+        Task task = getTask(taskNumber);
         boolean wasDone = task.isDone();
         task.toggleDone();
         assert task.isDone() != wasDone : "Toggling a task should invert its done status";
@@ -67,6 +67,17 @@ public class TaskList {
      */
     public List<Task> getTasks() {
         return List.copyOf(tasks);
+    }
+
+    /**
+     * Returns the task identified by its one-based display number.
+     *
+     * @param taskNumber one-based task number shown to the user
+     * @return the selected task
+     * @throws RamboException if the task number does not exist
+     */
+    public Task getTask(int taskNumber) throws RamboException {
+        return tasks.get(getIndex(taskNumber));
     }
 
     /**

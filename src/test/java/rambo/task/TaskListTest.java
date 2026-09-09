@@ -98,4 +98,12 @@ public class TaskListTest {
 
         assertThrows(UnsupportedOperationException.class, () -> returnedTasks.add(new Task("read book")));
     }
+
+    @Test
+    void getTask_validOneBasedTaskNumber_returnsSelectedTask() {
+        Task expectedTask = new Task("read book");
+        TaskList taskList = new TaskList(List.of(new Task("buy milk"), expectedTask));
+
+        assertEquals(expectedTask, taskList.getTask(2));
+    }
 }
