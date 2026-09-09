@@ -99,26 +99,26 @@ public class Storage {
 
         Task task;
         switch (fields[0]) {
-        case "T":
-            if (fields.length != 3) {
+            case "T":
+                if (fields.length != 3) {
+                    throw new RamboException("Invalid task record: " + line);
+                }
+                task = new Task(fields[2]);
+                break;
+            case "D":
+                if (fields.length != 4) {
+                    throw new RamboException("Invalid task record: " + line);
+                }
+                task = new DeadlineTask(fields[2], fields[3]);
+                break;
+            case "E":
+                if (fields.length != 5) {
+                    throw new RamboException("Invalid task record: " + line);
+                }
+                task = new EventTask(fields[2], fields[3], fields[4]);
+                break;
+            default:
                 throw new RamboException("Invalid task record: " + line);
-            }
-            task = new Task(fields[2]);
-            break;
-        case "D":
-            if (fields.length != 4) {
-                throw new RamboException("Invalid task record: " + line);
-            }
-            task = new DeadlineTask(fields[2], fields[3]);
-            break;
-        case "E":
-            if (fields.length != 5) {
-                throw new RamboException("Invalid task record: " + line);
-            }
-            task = new EventTask(fields[2], fields[3], fields[4]);
-            break;
-        default:
-            throw new RamboException("Invalid task record: " + line);
         }
         assert task != null : "A recognised record type should create a task";
 

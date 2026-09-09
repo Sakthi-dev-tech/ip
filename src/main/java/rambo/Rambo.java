@@ -267,25 +267,25 @@ public class Rambo {
 
     private boolean executeCliCommand(char command, String input, Ui ui) {
         switch (command) {
-        case '1':
-            Echo.start(ui);
-            break;
-        case '2':
-            addTaskFromCli(ui);
-            break;
-        case '3':
-            showTasks(ui, parser.parseSearchTerm(input));
-            break;
-        case '4':
-            toggleTaskFromCli(ui);
-            break;
-        case '5':
-            deleteTaskFromCli(ui);
-            break;
-        case 'q':
-            return false;
-        default:
-            throw new RamboException("That option doesn't exist, my friend! Try again!");
+            case '1':
+                Echo.start(ui);
+                break;
+            case '2':
+                addTaskFromCli(ui);
+                break;
+            case '3':
+                showTasks(ui, parser.parseSearchTerm(input));
+                break;
+            case '4':
+                toggleTaskFromCli(ui);
+                break;
+            case '5':
+                deleteTaskFromCli(ui);
+                break;
+            case 'q':
+                return false;
+            default:
+                throw new RamboException("That option doesn't exist, my friend! Try again!");
         }
         return true;
     }
@@ -305,14 +305,14 @@ public class Rambo {
 
     private Task createTaskFromCli(int taskType, Ui ui) {
         switch (taskType) {
-        case 1:
-            return new Task(readRequiredField(ui, "Enter your task name: ", "Task name cannot be blank!"));
-        case 2:
-            return createDeadlineFromCli(ui);
-        case 3:
-            return createEventFromCli(ui);
-        default:
-            throw new RamboException("Not a valid task type!");
+            case 1:
+                return new Task(readRequiredField(ui, "Enter your task name: ", "Task name cannot be blank!"));
+            case 2:
+                return createDeadlineFromCli(ui);
+            case 3:
+                return createEventFromCli(ui);
+            default:
+                throw new RamboException("Not a valid task type!");
         }
     }
 
