@@ -103,6 +103,9 @@ public class Storage {
      */
     private Task createTask(String line) throws RamboException {
         String[] fields = parseFields(line);
+        if (fields.length < TODO_FIELD_COUNT) {
+            throw createInvalidRecordException(line);
+        }
 
         Task task;
         switch (fields[TASK_TYPE_INDEX]) {

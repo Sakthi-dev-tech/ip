@@ -19,6 +19,9 @@ import rambo.task.DeadlineTask;
 import rambo.task.EventTask;
 import rambo.task.Task;
 
+/**
+ * Tests persistence and rejection of invalid task records.
+ */
 public class StorageTest {
     private static final Path DATA_FILE = Path.of("./data/Rambo.txt");
 
@@ -85,6 +88,18 @@ public class StorageTest {
         Storage storage = new Storage();
 
         assertThrows(RamboException.class, storage::loadTasks);
+    }
+
+    @Test
+    void loadTasks_separatorOnlyRecords_throwsRamboException() throws IOException {
+        Storage storage = new Storage();
+
+        for (String record : new String[] {"|", "|||"}) {
+            writeTestData(record);
+
+            RamboException exception = assertThrows(RamboException.class, storage::loadTasks);
+            assertEquals("Rambo: Invalid task record: " + record, exception.getMessage());
+        }
     }
 
     @Test
