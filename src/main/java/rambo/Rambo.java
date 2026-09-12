@@ -151,16 +151,14 @@ public class Rambo {
     private String addTodo(String taskName) throws RamboException {
         validateNotBlank(taskName, "Task name cannot be blank!");
         Task task = new Task(taskName);
-        taskList.add(task);
-        storage.saveTasks(taskList.getTasks());
+        addAndSaveTask(task);
         return getAddedTaskResponse(task);
     }
 
     private String addDeadline(String taskDetails) throws RamboException {
         String[] fields = splitRequiredMarker(taskDetails, "/by", "Use: deadline TASK_NAME /by YYYY-MM-DD");
         Task task = new DeadlineTask(fields[0], fields[1]);
-        taskList.add(task);
-        storage.saveTasks(taskList.getTasks());
+        addAndSaveTask(task);
         return getAddedTaskResponse(task);
     }
 
@@ -168,9 +166,16 @@ public class Rambo {
         String[] fromFields = splitRequiredMarker(taskDetails, "/from", EVENT_USAGE);
         String[] toFields = splitRequiredMarker(fromFields[1], "/to", EVENT_USAGE);
         Task task = new EventTask(fromFields[0], toFields[0], toFields[1]);
+        addAndSaveTask(task);
+        return getAddedTaskResponse(task);
+    }
+
+    /**
+     * Adds a task and persists the updated list for both GUI and CLI task creation.
+     */
+    private void addAndSaveTask(Task task) throws RamboException {
         taskList.add(task);
         storage.saveTasks(taskList.getTasks());
-        return getAddedTaskResponse(task);
     }
 
     private String toggleTask(String taskNumberText) throws RamboException {
@@ -327,8 +332,7 @@ public class Rambo {
 
         int taskType = parser.parseTaskType(ui.readLine());
         Task task = createTaskFromCli(taskType, ui);
-        taskList.add(task);
-        storage.saveTasks(taskList.getTasks());
+        addAndSaveTask(task);
         ui.showLine(Constants.ANSI_GREEN + "\nYour task has been added!" + Constants.ANSI_RESET);
     }
 
