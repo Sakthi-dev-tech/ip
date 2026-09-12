@@ -2,7 +2,6 @@ package rambo.gui;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -29,9 +28,6 @@ public class MainWindow {
 
     @FXML
     private TextField userInput;
-
-    @FXML
-    private Button sendButton;
 
     /**
      * Sets up the scroll behavior after FXML loading is complete.
