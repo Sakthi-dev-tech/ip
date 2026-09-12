@@ -7,7 +7,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import rambo.exception.RamboException;
 import rambo.task.DeadlineTask;
@@ -46,10 +48,8 @@ public class Storage {
      * @throws RamboException if the file cannot be read or contains an invalid task record
      */
     public List<Task> loadTasks() throws RamboException {
-        List<Task> tasks = new ArrayList<>();
-
         if (!Files.exists(dataFile)) {
-            return tasks;
+            return new ArrayList<>();
         }
 
         List<String> lines;
@@ -59,15 +59,10 @@ public class Storage {
             throw new RamboException("Could not read your saved tasks!", e);
         }
 
-        for (String line : lines) {
-            if (line.isBlank()) {
-                continue;
-            }
-
-            tasks.add(createTask(line));
-        }
-
-        return tasks;
+        return lines.stream()
+                .filter(line -> !line.isBlank())
+                .map(this::createTask)
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     /**
@@ -80,10 +75,9 @@ public class Storage {
         assert tasks != null : "The task list supplied by the application should not be null";
         assert tasks.stream().allMatch(task -> task != null)
                 : "The task list supplied by the application should not contain null tasks";
-        List<String> records = new ArrayList<>();
-        for (Task task : tasks) {
-            records.add(task.toDataString());
-        }
+        List<String> records = tasks.stream()
+                .map(Task::toDataString)
+                .toList();
 
         try {
             Path parentDirectory = dataFile.getParent();
@@ -129,11 +123,9 @@ public class Storage {
     }
 
     private String[] parseFields(String line) {
-        String[] fields = line.split(FIELD_SEPARATOR_REGEX);
-        for (int i = 0; i < fields.length; i++) {
-            fields[i] = fields[i].trim();
-        }
-        return fields;
+        return Arrays.stream(line.split(FIELD_SEPARATOR_REGEX))
+                .map(String::trim)
+                .toArray(String[]::new);
     }
 
     private void restoreDoneStatus(Task task, String doneMarker, String line) {
