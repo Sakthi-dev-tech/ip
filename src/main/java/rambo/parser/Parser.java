@@ -88,9 +88,7 @@ public class Parser {
             throw new RamboException("Give me a valid priority level from 1 to 3!", e);
         }
 
-        if (priorityLevel < Task.MIN_PRIORITY_LEVEL || priorityLevel > Task.MAX_PRIORITY_LEVEL) {
-            throw new RamboException("Priority level must be between 1 and 3!");
-        }
+        Task.validatePriorityLevel(priorityLevel);
         return priorityLevel;
     }
 

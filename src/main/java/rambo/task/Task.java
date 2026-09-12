@@ -73,10 +73,20 @@ public class Task {
      * @throws RamboException if the priority level is outside the supported range
      */
     public void setPriorityLevel(int priorityLevel) throws RamboException {
+        validatePriorityLevel(priorityLevel);
+        this.priorityLevel = priorityLevel;
+    }
+
+    /**
+     * Validates the priority range shared by task updates and user-input parsing.
+     *
+     * @param priorityLevel priority level to validate
+     * @throws RamboException if the level is outside the assignable range
+     */
+    public static void validatePriorityLevel(int priorityLevel) throws RamboException {
         if (priorityLevel < MIN_PRIORITY_LEVEL || priorityLevel > MAX_PRIORITY_LEVEL) {
             throw new RamboException("Priority level must be between 1 and 3!");
         }
-        this.priorityLevel = priorityLevel;
     }
 
     /**
