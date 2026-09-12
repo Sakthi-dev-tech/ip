@@ -11,6 +11,7 @@ import javafx.scene.layout.HBox;
  */
 public class DialogBox extends HBox {
     private static final int IMAGE_SIZE = 56;
+    private static final int MESSAGE_IMAGE_SPACING = 8;
     private static final double MESSAGE_MAX_WIDTH = 280.0;
 
     private final Label text;
@@ -26,7 +27,7 @@ public class DialogBox extends HBox {
         displayPicture.setPreserveRatio(true);
         getChildren().addAll(text, displayPicture);
         setAlignment(Pos.TOP_RIGHT);
-        setSpacing(8);
+        setSpacing(MESSAGE_IMAGE_SPACING);
     }
 
     /**

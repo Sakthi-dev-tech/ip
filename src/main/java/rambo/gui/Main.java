@@ -13,9 +13,16 @@ import rambo.Rambo;
  * A GUI for Rambo using FXML.
  */
 public class Main extends Application {
+    private static final int MIN_WINDOW_HEIGHT = 420;
+    private static final int MIN_WINDOW_WIDTH = 360;
 
     private final Rambo rambo = new Rambo();
 
+    /**
+     * Loads the chat window and displays it on the primary stage.
+     *
+     * @param stage primary application window
+     */
     @Override
     public void start(Stage stage) {
         try {
@@ -28,8 +35,8 @@ public class Main extends Application {
 
             stage.setScene(scene);
             stage.setTitle("Rambo");
-            stage.setMinHeight(420);
-            stage.setMinWidth(360);
+            stage.setMinHeight(MIN_WINDOW_HEIGHT);
+            stage.setMinWidth(MIN_WINDOW_WIDTH);
             fxmlLoader.<MainWindow>getController().setRambo(rambo);
             stage.show();
         } catch (IOException e) {
