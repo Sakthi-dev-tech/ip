@@ -87,48 +87,65 @@ public class Rambo {
         return isExitRequested;
     }
 
+    /**
+     * Separates a GUI command's keyword from its arguments without changing argument case.
+     */
     private String executeGuiCommand(String input) throws RamboException {
         if (input.isEmpty()) {
             throw new RamboException("Please enter a command.");
         }
 
-        String lowerCaseInput = input.toLowerCase(Locale.ROOT);
-        if (lowerCaseInput.equals("bye") || lowerCaseInput.equals("q")) {
-            isExitRequested = true;
-            return "Bye my friend!";
-        }
-        if (lowerCaseInput.equals("help")) {
-            return HELP_MESSAGE;
-        }
-        if (lowerCaseInput.equals("list")) {
-            return getTaskListResponse("");
-        }
-        if (lowerCaseInput.startsWith("find ")) {
-            return getTaskListResponse(input.substring("find".length()).trim());
-        }
-        if (lowerCaseInput.startsWith("todo ")) {
-            return addTodo(input.substring("todo".length()).trim());
-        }
-        if (lowerCaseInput.startsWith("deadline ")) {
-            return addDeadline(input.substring("deadline".length()).trim());
-        }
-        if (lowerCaseInput.startsWith("event ")) {
-            return addEvent(input.substring("event".length()).trim());
-        }
-        if (lowerCaseInput.startsWith("done ")) {
-            return toggleTask(input.substring("done".length()).trim());
-        }
-        if (lowerCaseInput.startsWith("toggle ")) {
-            return toggleTask(input.substring("toggle".length()).trim());
-        }
-        if (lowerCaseInput.startsWith("delete ")) {
-            return deleteTask(input.substring("delete".length()).trim());
-        }
-        if (lowerCaseInput.startsWith("priority ")) {
-            return setTaskPriority(input.substring("priority".length()).trim());
+        int separatorIndex = input.indexOf(' ');
+        if (separatorIndex < 0) {
+            return executeGuiCommandWithoutArguments(input.toLowerCase(Locale.ROOT));
         }
 
-        throw new RamboException("I do not understand that command.\n" + HELP_MESSAGE);
+        String command = input.substring(0, separatorIndex).toLowerCase(Locale.ROOT);
+        String arguments = input.substring(separatorIndex + 1).trim();
+        return executeGuiCommandWithArguments(command, arguments);
+    }
+
+    /**
+     * Executes commands that must appear on their own.
+     */
+    private String executeGuiCommandWithoutArguments(String command) throws RamboException {
+        switch (command) {
+        case "bye":
+        case "q":
+            isExitRequested = true;
+            return "Bye my friend!";
+        case "help":
+            return HELP_MESSAGE;
+        case "list":
+            return getTaskListResponse("");
+        default:
+            throw new RamboException("I do not understand that command.\n" + HELP_MESSAGE);
+        }
+    }
+
+    /**
+     * Routes commands with arguments to their task operations.
+     */
+    private String executeGuiCommandWithArguments(String command, String arguments) throws RamboException {
+        switch (command) {
+        case "find":
+            return getTaskListResponse(arguments);
+        case "todo":
+            return addTodo(arguments);
+        case "deadline":
+            return addDeadline(arguments);
+        case "event":
+            return addEvent(arguments);
+        case "done":
+        case "toggle":
+            return toggleTask(arguments);
+        case "delete":
+            return deleteTask(arguments);
+        case "priority":
+            return setTaskPriority(arguments);
+        default:
+            throw new RamboException("I do not understand that command.\n" + HELP_MESSAGE);
+        }
     }
 
     private String addTodo(String taskName) throws RamboException {

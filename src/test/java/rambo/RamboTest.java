@@ -1,5 +1,6 @@
 package rambo;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -145,6 +146,43 @@ public class RamboTest {
             assertTrue(rambo.getResponse("priority 1 3").contains("[T][][P3] buy milk"));
             assertTrue(rambo.getResponse("list").startsWith("1. [T][][P3] buy milk"));
             assertTrue(rambo.getResponse("priority 1 4").contains("Priority level must be between 1 and 3"));
+        } finally {
+            Files.deleteIfExists(DATA_FILE);
+        }
+    }
+
+    @Test
+    void getResponse_commandRouting_preservesArgumentsAndSupportsAliases() throws IOException {
+        Files.deleteIfExists(DATA_FILE);
+        try {
+            Rambo rambo = new Rambo();
+
+            assertTrue(rambo.getResponse("  ToDo   Buy MILK  ").contains("[T][] Buy MILK"));
+            assertTrue(rambo.getResponse("FiNd milk").contains("1. [T][] Buy MILK"));
+            assertTrue(rambo.getResponse("ToGgLe 1").contains("[T][X] Buy MILK"));
+            assertTrue(rambo.getResponse("EVENT Team Meeting /from 2026-09-20 /to 2026-09-22")
+                    .contains("[E][] Team Meeting (from: Sep 20 2026 to: Sep 22 2026)"));
+            assertTrue(rambo.getResponse("DELETE 1").contains("[T][X] Buy MILK"));
+            assertTrue(rambo.getResponse("HELP").startsWith("Try one of these commands:"));
+            assertEquals("Bye my friend!", rambo.getResponse("Q"));
+            assertTrue(rambo.isExitRequested());
+        } finally {
+            Files.deleteIfExists(DATA_FILE);
+        }
+    }
+
+    @Test
+    void getResponse_invalidCommandForms_rejectsWithoutExecuting() throws IOException {
+        Files.deleteIfExists(DATA_FILE);
+        try {
+            Rambo rambo = new Rambo();
+
+            for (String command : new String[] {"todo", "todoist milk", "todo\tmilk", "list extra", "bye now"}) {
+                assertTrue(rambo.getResponse(command).contains("I do not understand that command."), command);
+            }
+            assertEquals("Rambo: Please enter a command.", rambo.getResponse("   "));
+            assertEquals("Your task list is empty.", rambo.getResponse("list"));
+            assertFalse(rambo.isExitRequested());
         } finally {
             Files.deleteIfExists(DATA_FILE);
         }
