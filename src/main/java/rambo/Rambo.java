@@ -19,14 +19,16 @@ import rambo.ui.Ui;
  */
 public class Rambo {
     private static final String EVENT_USAGE = "event TASK_NAME /from YYYY-MM-DD /to YYYY-MM-DD";
-    private static final String HELP_MESSAGE = "Try one of these commands:\n"
+    private static final String HELP_MESSAGE = "Mission briefing! Try one of these commands:\n"
             + "list\n"
+            + "find KEYWORD\n"
             + "todo TASK_NAME\n"
             + "deadline TASK_NAME /by YYYY-MM-DD\n"
             + EVENT_USAGE + "\n"
             + "done TASK_NUMBER\n"
             + "priority TASK_NUMBER LEVEL (1 is highest)\n"
             + "delete TASK_NUMBER\n"
+            + "help\n"
             + "bye";
     private static final String CLI_OPTIONS = "1) Echo\n"
             + "2) Add Task\n"
@@ -75,7 +77,7 @@ public class Rambo {
      * @return welcome message and command list
      */
     public String getWelcomeMessage() {
-        return "Hello! I am Rambo.\nWhat can I do for you?\n\n" + HELP_MESSAGE;
+        return Constants.WELCOME_MESSAGE + "\n\n" + HELP_MESSAGE;
     }
 
     /**
@@ -113,7 +115,7 @@ public class Rambo {
             case "bye":
             case "q":
                 isExitRequested = true;
-                return "Bye my friend!";
+                return Constants.GOODBYE_MESSAGE;
             case "help":
                 return HELP_MESSAGE;
             case "list":
@@ -182,7 +184,7 @@ public class Rambo {
         int taskNumber = parser.parseTaskNumber(taskNumberText);
         taskList.toggle(taskNumber);
         storage.saveTasks(taskList.getTasks());
-        return "Nice! I've updated this task:\n  " + taskList.getTask(taskNumber);
+        return "Roger that! Task status updated:\n  " + taskList.getTask(taskNumber);
     }
 
     private String deleteTask(String taskNumberText) throws RamboException {
@@ -190,7 +192,7 @@ public class Rambo {
         Task taskToDelete = taskList.getTask(taskNumber);
         taskList.delete(taskNumber);
         storage.saveTasks(taskList.getTasks());
-        return "Noted. I've removed this task:\n  " + taskToDelete;
+        return "Mission retired! I've removed this task:\n  " + taskToDelete;
     }
 
     private String setTaskPriority(String taskDetails) throws RamboException {
@@ -203,13 +205,13 @@ public class Rambo {
         int priorityLevel = parser.parsePriorityLevel(fields[1]);
         taskList.setPriority(taskNumber, priorityLevel);
         storage.saveTasks(taskList.getTasks());
-        return "Got it. I've updated this task's priority:\n  " + taskList.getTask(taskNumber);
+        return "Orders updated! I've changed this task's priority:\n  " + taskList.getTask(taskNumber);
     }
 
     private String getTaskListResponse(String searchTerm) {
         List<Task> tasks = taskList.getTasks();
         if (tasks.isEmpty()) {
-            return "Your task list is empty.";
+            return "All clear! Your task list is empty.";
         }
 
         StringBuilder response = new StringBuilder();
@@ -228,7 +230,8 @@ public class Rambo {
     }
 
     private String getAddedTaskResponse(Task task) {
-        return String.format("Got it. I've added this task:%n  %s%nNow you have %d task(s) in the list.",
+        return String.format("Mission accepted! I've added this task:%n  %s%n"
+                + "Now you have %d task(s) on the mission board.",
                 task, taskList.getTasks().size());
     }
 
@@ -333,7 +336,7 @@ public class Rambo {
         int taskType = parser.parseTaskType(ui.readLine());
         Task task = createTaskFromCli(taskType, ui);
         addAndSaveTask(task);
-        ui.showLine(Constants.ANSI_GREEN + "\nYour task has been added!" + Constants.ANSI_RESET);
+        ui.showLine(Constants.ANSI_GREEN + "\nMission accepted! Your task has been added!" + Constants.ANSI_RESET);
     }
 
     private Task createTaskFromCli(int taskType, Ui ui) {

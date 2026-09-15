@@ -5,22 +5,22 @@
 
 .user-dialog .label,
 .rambo-dialog .label {
-    -fx-background-radius: 8;
+    -fx-background-radius: 6;
     -fx-padding: 10 12;
     -fx-font-size: 14px;
     -fx-line-spacing: 2;
 }
 
 .user-dialog .label {
-    -fx-background-color: #2f6f68;
+    -fx-background-color: #4f6035;
     -fx-text-fill: white;
 }
 
 .rambo-dialog .label {
-    -fx-background-color: #ffffff;
-    -fx-border-color: #d8dee8;
-    -fx-border-radius: 8;
-    -fx-text-fill: #17202a;
+    -fx-background-color: #30372c;
+    -fx-border-color: #59614d;
+    -fx-border-radius: 6;
+    -fx-text-fill: #f0f2e8;
 }
 
 .image-view {

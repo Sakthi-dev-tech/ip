@@ -21,19 +21,8 @@ public class Ui {
      * Displays the application's welcome message.
      */
     public void showWelcome() {
-        String banner = " (                           \n"
-                + ")\\ )                 )\n"
-                + "(()/(   )    )    ( /(\n"
-                + " /(_)| /(   (     )\\()) (\n"
-                + "(_)) )(_))  )\\  '((_)\\  )\\\n"
-                + "| _ ((_)_ _((_)) | |(_)((_)\n"
-                + "|   / _` | '  \\()| '_ Y _ \\\n"
-                + "|_|_\\__,_|_|_|_| |_.__|___/\n"
-                + "                            ";
-
-        showDivider();
-        showLine(banner);
-        showLine("Hello! I am Rambo.\nWhat can I do for you?");
+        showDivider(Constants.BOT_NAME);
+        showLine(Constants.WELCOME_MESSAGE);
         showLine("\n");
     }
 
@@ -42,7 +31,7 @@ public class Ui {
      */
     public void showGoodbye() {
         showDivider();
-        showLine("Bye my friend!");
+        showLine(Constants.GOODBYE_MESSAGE);
     }
 
     /**

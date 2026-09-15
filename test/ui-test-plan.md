@@ -30,7 +30,7 @@ q
 Enter your option:
 Rambo: That option doesn't exist, my friend! Try again!
 Enter your option:
-Bye my friend!
+Stand down and recharge. Rambo out!
 ```
 
 ### UI-02 — Survive blank main-menu input
@@ -51,7 +51,7 @@ q
 Enter your option:
 Rambo: That option doesn't exist, my friend! Try again!
 Enter your option:
-Bye my friend!
+Stand down and recharge. Rambo out!
 ```
 
 ### UI-03 — Reject nonnumeric task type
@@ -73,7 +73,7 @@ q
 Choose the type of task you want to add:
 Rambo: Give me a valid task type number!
 Enter your option:
-Bye my friend!
+Stand down and recharge. Rambo out!
 ```
 
 ### UI-04 — Reject blank task name
@@ -96,7 +96,7 @@ q
 Enter your task name:
 Rambo: Task name cannot be blank!
 Enter your option:
-Bye my friend!
+Stand down and recharge. Rambo out!
 ```
 
 ### UI-05 — Reject task indexes at both boundaries
@@ -125,7 +125,7 @@ Enter the index of the task you want to toggle status of:
 Rambo: I cannot find this task! Give a valid index!
 Enter the index of the task you want to toggle status of:
 Rambo: I cannot find this task! Give a valid index!
-Bye my friend!
+Stand down and recharge. Rambo out!
 ```
 
 ### UI-06 — Preserve command-like and non-ASCII echo text
@@ -149,7 +149,7 @@ q
 You: Rambo: q; rm -rf /
 You: Rambo: 你好 👋
 You: Back to home!
-Bye my friend!
+Stand down and recharge. Rambo out!
 ```
 
 ### UI-07 — Keep task state across operations
@@ -177,7 +177,7 @@ Your task has been added!
 1: [T][] buy milk
 Enter the index of the task you want to toggle status of:
 1: [T][X] buy milk
-Bye my friend!
+Stand down and recharge. Rambo out!
 ```
 
 ### UI-08 — Handle end-of-input at the main menu
@@ -190,7 +190,7 @@ Bye my friend!
 
 ```text
 Enter your option:
-Bye my friend!
+Stand down and recharge. Rambo out!
 ```
 
 ### UI-09 — Delete a task and retain the remaining task
@@ -220,7 +220,7 @@ Your task has been added!
 Your task has been added!
 Enter the index of the task you want to remove:
 1: [T][] read book
-Bye my friend!
+Stand down and recharge. Rambo out!
 ```
 
 ### UI-10 — Search task descriptions
@@ -250,7 +250,7 @@ q
 3) List Tasks (use: 3 <keyword> to search)
 1: [T][] buy milk
 3: [T][] milk tea
-Bye my friend!
+Stand down and recharge. Rambo out!
 ```
 
 ### UI-11 — Report a task search with no matches
@@ -272,7 +272,7 @@ q
 
 ```text
 No tasks found matching "homework".
-Bye my friend!
+Stand down and recharge. Rambo out!
 ```
 
 ### UI-12 — Add and display tasks with dates
@@ -303,7 +303,7 @@ Your task has been added!
 Your task has been added!
 1: [D][] submit report (by: Sep 15 2026)
 2: [E][] project meeting (from: Sep 20 2026 to: Sep 22 2026)
-Bye my friend!
+Stand down and recharge. Rambo out!
 ```
 
 ### UI-13 — Reject an invalid deadline date
@@ -327,7 +327,7 @@ q
 Enter your deadline:
 Rambo: Please make sure your date is the following format (YYYY-MM-DD)
 Enter your option:
-Bye my friend!
+Stand down and recharge. Rambo out!
 ```
 
 ### UI-14 — Reject an invalid event date
@@ -353,7 +353,7 @@ Enter your from date:
 Enter your to date:
 Rambo: Please make sure your date is the following format (YYYY-MM-DD)
 Enter your option:
-Bye my friend!
+Stand down and recharge. Rambo out!
 ```
 
 ## Results
@@ -408,3 +408,15 @@ Bye my friend!
   - Build: PASS
   - UI-01–UI-14: PASS
   - Scope: deadline and event date coverage
+
+
+## Rambo GUI appearance
+
+Launch with Java 25 using `./gradlew run`.
+
+- Confirm the window title says `Rambo | Mission control` and the charcoal header shows a star and Rambo's name.
+- Confirm the charcoal chat background, olive user bubbles, and readable light text in bot bubbles.
+- Resize to the minimum window size; check that the header and input stay visible and messages wrap.
+- Send `todo pack supplies`, `done 1`, `priority 1 1`, and `delete 1`; check the mission-themed replies.
+- Try `help` and an invalid command; command instructions and error details should remain clear.
+- Check the Send button's hover style and visible keyboard focus on the input and button.

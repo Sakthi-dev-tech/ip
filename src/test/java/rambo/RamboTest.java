@@ -29,7 +29,7 @@ public class RamboTest {
                 "Rambo: That option doesn't exist, my friend! Try again!",
                 "Rambo: That option doesn't exist, my friend! Try again!",
                 "Rambo: Give me a valid task type number!",
-                "Bye my friend!");
+                "Stand down and recharge. Rambo out!");
     }
 
     @Test
@@ -40,7 +40,7 @@ public class RamboTest {
                 "You: Rambo: q; rm -rf /",
                 "You: Rambo: 你好 👋",
                 "You: Back to home!",
-                "Bye my friend!");
+                "Stand down and recharge. Rambo out!");
     }
 
     @Test
@@ -58,7 +58,7 @@ public class RamboTest {
                 "Enter the index of the task you want to toggle status of:",
                 "Enter the index of the task you want to remove:",
                 "1: [T][X] buy milk",
-                "Bye my friend!");
+                "Stand down and recharge. Rambo out!");
         assertFalse(output.contains("2: [T][] read book"));
     }
 
@@ -72,7 +72,7 @@ public class RamboTest {
         assertOutputContainsInOrder(output,
                 "1: [D][] submit report (by: Sep 15 2026)",
                 "2: [E][] project meeting (from: Sep 20 2026 to: Sep 22 2026)",
-                "Bye my friend!");
+                "Stand down and recharge. Rambo out!");
     }
 
     @Test
@@ -88,7 +88,7 @@ public class RamboTest {
                 "Enter a priority level from 1 (highest) to 3 (lowest):",
                 "1: [T][] buy milk",
                 "2: [T][][P1] read book",
-                "Bye my friend!");
+                "Stand down and recharge. Rambo out!");
     }
 
     @Test
@@ -97,7 +97,7 @@ public class RamboTest {
 
         assertOutputContainsInOrder(output,
                 "Enter your option:",
-                "Bye my friend!");
+                "Stand down and recharge. Rambo out!");
     }
 
     @Test
@@ -107,7 +107,7 @@ public class RamboTest {
         assertOutputContainsInOrder(output,
                 "Welcome to Echo!",
                 "You:",
-                "Bye my friend!");
+                "Stand down and recharge. Rambo out!");
     }
 
     @Test
@@ -116,7 +116,7 @@ public class RamboTest {
 
         assertOutputContainsInOrder(output,
                 "q or bye) Quit",
-                "Bye my friend!");
+                "Stand down and recharge. Rambo out!");
     }
 
     @Test
@@ -163,8 +163,8 @@ public class RamboTest {
             assertTrue(rambo.getResponse("EVENT Team Meeting /from 2026-09-20 /to 2026-09-22")
                     .contains("[E][] Team Meeting (from: Sep 20 2026 to: Sep 22 2026)"));
             assertTrue(rambo.getResponse("DELETE 1").contains("[T][X] Buy MILK"));
-            assertTrue(rambo.getResponse("HELP").startsWith("Try one of these commands:"));
-            assertEquals("Bye my friend!", rambo.getResponse("Q"));
+            assertTrue(rambo.getResponse("HELP").startsWith("Mission briefing! Try one of these commands:"));
+            assertEquals("Stand down and recharge. Rambo out!", rambo.getResponse("Q"));
             assertTrue(rambo.isExitRequested());
         } finally {
             Files.deleteIfExists(DATA_FILE);
@@ -181,7 +181,7 @@ public class RamboTest {
                 assertTrue(rambo.getResponse(command).contains("I do not understand that command."), command);
             }
             assertEquals("Rambo: Please enter a command.", rambo.getResponse("   "));
-            assertEquals("Your task list is empty.", rambo.getResponse("list"));
+            assertEquals("All clear! Your task list is empty.", rambo.getResponse("list"));
             assertFalse(rambo.isExitRequested());
         } finally {
             Files.deleteIfExists(DATA_FILE);

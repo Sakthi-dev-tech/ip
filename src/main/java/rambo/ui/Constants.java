@@ -5,6 +5,14 @@ package rambo.ui;
  * Provides ANSI color codes and divider strings for UI formatting.
  */
 public final class Constants {
+    /** Display name shared by the chat window and command-line interface. */
+    public static final String BOT_NAME = "Rambo";
+    /** Greeting that introduces the chatbot's encouraging mission-commander personality. */
+    public static final String WELCOME_MESSAGE = BOT_NAME + " reporting for duty! Ready when you are.\n"
+            + "Let's tackle today's missions, one task at a time.";
+    /** Farewell shared by both interfaces. */
+    public static final String GOODBYE_MESSAGE = "Stand down and recharge. Rambo out!";
+
     /** ANSI green color code for terminal text highlighting. */
     public static final String ANSI_GREEN = "\u001B[32m";
     /** ANSI red color code for terminal text highlighting. */

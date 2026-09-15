@@ -1,5 +1,6 @@
 package rambo;
 
+import rambo.ui.Constants;
 import rambo.ui.Ui;
 
 /**
@@ -34,7 +35,7 @@ public class Echo {
                 return;
             }
 
-            ui.showPrompt("Rambo: ");
+            ui.showPrompt(Constants.BOT_NAME + ": ");
             ui.showLine(userText);
         }
     }

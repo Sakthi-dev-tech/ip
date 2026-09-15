@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import rambo.Rambo;
+import rambo.ui.Constants;
 
 /**
  * A GUI for Rambo using FXML.
@@ -34,7 +35,7 @@ public class Main extends Application {
                     Main.class.getResource("/css/dialog-box.css").toExternalForm());
 
             stage.setScene(scene);
-            stage.setTitle("Rambo");
+            stage.setTitle(Constants.BOT_NAME + " | Mission control");
             stage.setMinHeight(MIN_WINDOW_HEIGHT);
             stage.setMinWidth(MIN_WINDOW_WIDTH);
             fxmlLoader.<MainWindow>getController().setRambo(rambo);

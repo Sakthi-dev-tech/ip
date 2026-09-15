@@ -1,5 +1,7 @@
 package rambo.exception;
 
+import rambo.ui.Constants;
+
 /**
  * Represents an error caused by invalid input to Rambo.
  */
@@ -11,7 +13,7 @@ public class RamboException extends RuntimeException {
      * @param message explanation shown to the user
      */
     public RamboException(String message) {
-        super("Rambo: " + message);
+        super(Constants.BOT_NAME + ": " + message);
     }
 
     /**
@@ -21,6 +23,6 @@ public class RamboException extends RuntimeException {
      * @param cause underlying exception that caused the failure
      */
     public RamboException(String message, Throwable cause) {
-        super("\nRambo: " + message, cause);
+        super("\n" + Constants.BOT_NAME + ": " + message, cause);
     }
 }
