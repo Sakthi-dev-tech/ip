@@ -37,3 +37,26 @@ Make sure the project is using Java 25, then run:
 
 JUnit runs focused tests for individual classes and representative simulated conversations automatically. A successful
 test is reported as `PASSED`; if a conversation test fails, its captured Rambo output is shown for comparison.
+
+## Checking code style
+
+Checkstyle automatically checks Java source and test files against the
+[SE-EDU Java coding standard](https://se-education.org/guides/conventions/java/intermediate.html).
+The rules in `config/checkstyle/` come from
+[AddressBook Level 3](https://github.com/se-edu/addressbook-level3/tree/master/config/checkstyle), following the
+[course setup tutorial](https://se-education.org/guides/tutorials/checkstyle.html).
+It complements coding guidance by detecting style violations consistently; it does not replace code review.
+
+With Java 25 selected, run style checks manually:
+
+```shell
+./gradlew checkstyleMain checkstyleTest
+```
+
+Run both tests and style checks with `./gradlew check`. Style checks also run as part of `./gradlew build`.
+On Windows, use `gradlew.bat` instead of `./gradlew`.
+Any style error or warning fails the check. HTML reports are generated at
+`build/reports/checkstyle/main.html` and `build/reports/checkstyle/test.html`.
+
+For editor feedback in IntelliJ, install CheckStyle-IDEA, select version **14.1.0**, and activate
+`config/checkstyle/checkstyle.xml` as a local configuration. Include test sources in the scan scope.

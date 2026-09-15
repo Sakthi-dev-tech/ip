@@ -110,16 +110,16 @@ public class Rambo {
      */
     private String executeGuiCommandWithoutArguments(String command) throws RamboException {
         switch (command) {
-        case "bye":
-        case "q":
-            isExitRequested = true;
-            return "Bye my friend!";
-        case "help":
-            return HELP_MESSAGE;
-        case "list":
-            return getTaskListResponse("");
-        default:
-            throw new RamboException("I do not understand that command.\n" + HELP_MESSAGE);
+            case "bye":
+            case "q":
+                isExitRequested = true;
+                return "Bye my friend!";
+            case "help":
+                return HELP_MESSAGE;
+            case "list":
+                return getTaskListResponse("");
+            default:
+                throw new RamboException("I do not understand that command.\n" + HELP_MESSAGE);
         }
     }
 
@@ -128,23 +128,23 @@ public class Rambo {
      */
     private String executeGuiCommandWithArguments(String command, String arguments) throws RamboException {
         switch (command) {
-        case "find":
-            return getTaskListResponse(arguments);
-        case "todo":
-            return addTodo(arguments);
-        case "deadline":
-            return addDeadline(arguments);
-        case "event":
-            return addEvent(arguments);
-        case "done":
-        case "toggle":
-            return toggleTask(arguments);
-        case "delete":
-            return deleteTask(arguments);
-        case "priority":
-            return setTaskPriority(arguments);
-        default:
-            throw new RamboException("I do not understand that command.\n" + HELP_MESSAGE);
+            case "find":
+                return getTaskListResponse(arguments);
+            case "todo":
+                return addTodo(arguments);
+            case "deadline":
+                return addDeadline(arguments);
+            case "event":
+                return addEvent(arguments);
+            case "done":
+            case "toggle":
+                return toggleTask(arguments);
+            case "delete":
+                return deleteTask(arguments);
+            case "priority":
+                return setTaskPriority(arguments);
+            default:
+                throw new RamboException("I do not understand that command.\n" + HELP_MESSAGE);
         }
     }
 
